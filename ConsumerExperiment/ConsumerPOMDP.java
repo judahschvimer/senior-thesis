@@ -73,7 +73,7 @@ public class ConsumerPOMDP implements DomainGenerator {
         Attribute wtpAtt = new Attribute(domain, ATTWTP, AttributeType.INT);
         wtpAtt.setLims(PMIN, PMAX);
         Attribute decisionAtt = new Attribute(domain, ATTDECISION, AttributeType.DISC);
-        decisionAtt.setDiscValues(new String[]{OBBUY, OBEAVE});
+        decisionAtt.setDiscValues(new String[]{OBBUY, OBLEAVE});
 
 		ObjectClass observationClass = new ObjectClass(domain, CLASSOBSERVATION);
         observationClass.addAttribute(decisionAtt);
@@ -159,40 +159,14 @@ public class ConsumerPOMDP implements DomainGenerator {
 			for(int i=PMIN; i<PMAX; i++){
 				State ns = s.copy();
 				ObjectInstance consumer = ns.getFirstObjectOfClass(CLASSCONSUMER);
-				ObjectInstance observation = ns.getFirstObjectOfClass(CLASSOBSERVATION);
-				int curWTP = consumer.getDiscValForAttribute(ATTWTP);
-				String decision = this.getDecision(price, curWTP);
-
-				observation.setValue(ATTDECISION, decision);
-
-				//return the state we just modified
-
-				//probability is 1 if it's the decision and 0 otherwise
-				if(trans.equals(decision)){
-					tps.add(new TransitionProbability(ns, 1));
-				}
-				else{
-					tps.add(new TransitionProbability(ns, 0));
-				}
+				consumer.setValue(ATTWTP, i);
+				double probability = 1.0/((double)(PMAX-PMIN));
+				tps.add(new TransitionProbability(ns, probability));
 			}
 
             return tps;
         }
 
-		protected String getDecision(double price, double wtp){
-			if(price < wtp){
-				return VALBUY;
-			}
-			else{
-				return VALLEAVE;
-			}
-			/*else if (price > 2*wtp){
-				return VALLEAVE;
-			}
-			else{
-				return VALPASS;
-			}*/
-        }
 
     }
 
@@ -205,10 +179,9 @@ public class ConsumerPOMDP implements DomainGenerator {
 		@Override
 		public List<State> getAllPossibleObservations() {
 
-			List<State> result = new ArrayList<State>(3);
+			List<State> result = new ArrayList<State>(2);
 
 			result.add(this.observationBuy());
-			result.add(this.observationPass());
 			result.add(this.observationLeave());
 
 			return result;
@@ -217,16 +190,15 @@ public class ConsumerPOMDP implements DomainGenerator {
 		@Override
 		public State sampleObservation(State state, GroundedAction action){
 
+			int price = Integer.parseInt(action.actionName().substring(5));
+			int wtp = state.getFirstObjectOfClass(CLASSCONSUMER).getDiscValForAttribute(ATTWTP);
 			ObjectInstance observation = state.getFirstObjectOfClass(CLASSOBSERVATION);
-			String decision = observation.getStringValForAttribute(ATTDECISION);
+			String decision = this.getDecision(price, wtp);
 
-			if(decision.equals(VALBUY)){
+			if(decision.equals(OBBUY)){
 				return this.observationBuy();
 			}
-			else if(decision.equals(VALPASS)){
-				return this.observationPass();
-			}
-			else if(decision.equals(VALLEAVE)){
+			else if(decision.equals(OBLEAVE)){
 				return this.observationLeave();
 			}
 			else{
@@ -238,23 +210,20 @@ public class ConsumerPOMDP implements DomainGenerator {
 		public double getObservationProbability(State observation, State state,
 				GroundedAction action) {
 
-			String decision = state.getFirstObjectOfClass(CLASSOBSERVATION).getStringValForAttribute(ATTDECISION);
+			int price = Integer.parseInt(action.actionName().substring(5));
+			int wtp = state.getFirstObjectOfClass(CLASSCONSUMER).getDiscValForAttribute(ATTWTP);
+			String decision = this.getDecision(price, wtp);
+
 			String oVal = observation.getFirstObjectOfClass(CLASSOBSERVATION).getStringValForAttribute(ATTDECISION);
 
-			if(decision.equals(VALBUY)){
-				if(oVal.equals(VALBUY)){
+			if(decision.equals(OBBUY)){
+				if(oVal.equals(OBBUY)){
 					return 1.;
 				}
 				return 0.;
 			}
-			else if(decision.equals(VALPASS)){
-				if(oVal.equals(VALPASS)){
-					return 1.;
-				}
-				return 0.;
-			}
-			else if(decision.equals(VALLEAVE)){
-				if(oVal.equals(VALPASS)){
+			else if(decision.equals(OBLEAVE)){
+				if(oVal.equals(OBLEAVE)){
 					return 1.;
 				}
 				return 0.;
@@ -265,26 +234,41 @@ public class ConsumerPOMDP implements DomainGenerator {
 
 		}
 
+		protected String getDecision(double price, double wtp){
+			if(price < wtp){
+				return OBBUY;
+			}
+			else{
+				return OBLEAVE;
+			}
+			/*else if (price > 2*wtp){
+				return OBLEAVE;
+			}
+			else{
+				return OBPASS;
+			}*/
+        }
+
 		protected State observationBuy(){
 			State buy = new State();
 			ObjectInstance obB = new ObjectInstance(this.domain.getObjectClass(CLASSOBSERVATION), CLASSOBSERVATION);
-			obB.setValue(ATTDECISION, VALBUY);
+			obB.setValue(ATTDECISION, OBBUY);
 			buy.addObject(obB);
 			return buy;
 		}
 
-		protected State observationPass(){
+		/*protected State observationPass(){
 			State pass = new State();
 			ObjectInstance obP = new ObjectInstance(this.domain.getObjectClass(CLASSOBSERVATION), CLASSOBSERVATION);
-			obP.setValue(ATTDECISION, VALPASS);
+			obP.setValue(ATTDECISION, OBPASS);
 			pass.addObject(obP);
 			return pass;
-		}
+		}*/
 
 		protected State observationLeave(){
 			State leave = new State();
 			ObjectInstance obL = new ObjectInstance(this.domain.getObjectClass(CLASSOBSERVATION), CLASSOBSERVATION);
-			obL.setValue(ATTDECISION, VALLEAVE);
+			obL.setValue(ATTDECISION, OBLEAVE);
 			leave.addObject(obL);
 			return leave;
 		}
@@ -307,11 +291,11 @@ public class ConsumerPOMDP implements DomainGenerator {
 
             //Did the player buy it?
 			switch (curDecision){
-				case VALBUY:
+				case OBBUY:
 					return curPrice;
-				case VALPASS:
+				case OBPASS:
 					return 0;
-				case VALLEAVE:
+				case OBLEAVE:
 					return 0;
 				default:
 					throw new RuntimeException("Decision " + curDecision + " does not exist.");
