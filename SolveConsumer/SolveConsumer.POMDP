@@ -1,48 +1,52 @@
 discount: 0.95
 values: reward
-states: WTP-1 WTP-2 WTP-3 WTP-4 WTP-5
-actions: P-1 P-2 P-3 P-4 P-5
-observations: Buy Leave
+states: wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 bought left
+actions: p-1 p-2 p-3 p-4 p-5
+observations: bought-o left-o pass-o
 
-#start include: WTP-1 WTP-2 WTP-3 WTP-4 WTP-5
+start include: wtp-1 wtp-2 wtp-3 wtp-4 wtp-5
 
-T : * : *
-0.2 0.2 0.2 0.2 0.2
+T: * : bought : bought 1.0
+T: * : left : left 1.0
 
-O : P-1 : * : Buy 1.0
-O : P-2 : WTP-1 : Leave 1.0
-O : P-2 : WTP-2 : Buy 1.0
-O : P-2 : WTP-3 : Buy 1.0
-O : P-2 : WTP-4 : Buy 1.0
-O : P-2 : WTP-5 : Buy 1.0
-O : P-3 : WTP-1 : Leave 1.0
-O : P-3 : WTP-2 : Leave 1.0
-O : P-3 : WTP-3 : Buy 1.0
-O : P-3 : WTP-4 : Buy 1.0
-O : P-3 : WTP-5 : Buy 1.0
-O : P-4 : WTP-1 : Leave 1.0
-O : P-4 : WTP-2 : Leave 1.0
-O : P-4 : WTP-3 : Leave 1.0
-O : P-4 : WTP-4 : Buy 1.0
-O : P-4 : WTP-5 : Buy 1.0
-O : P-5 : WTP-1 : Leave 1.0
-O : P-5 : WTP-2 : Leave 1.0
-O : P-5 : WTP-3 : Leave 1.0
-O : P-5 : WTP-4 : Leave 1.0
-O : P-5 : WTP-5 : Buy 1.0
+T: p-1 : wtp-1 : bought 1.0
+T: p-1 : wtp-2 : bought 1.0
+T: p-1 : wtp-3 : bought 1.0
+T: p-1 : wtp-4 : bought 1.0
+T: p-1 : wtp-5 : bought 1.0
 
-R : P-1 : WTP-1 : * : * 1.0
-R : P-1 : WTP-2 : * : * 1.0
-R : P-1 : WTP-3 : * : * 1.0
-R : P-1 : WTP-4 : * : * 1.0
-R : P-1 : WTP-5 : * : * 1.0
-R : P-2 : WTP-2 : * : * 2.0
-R : P-2 : WTP-3 : * : * 2.0
-R : P-2 : WTP-4 : * : * 2.0
-R : P-2 : WTP-5 : * : * 2.0
-R : P-3 : WTP-3 : * : * 3.0
-R : P-3 : WTP-4 : * : * 3.0
-R : P-3 : WTP-5 : * : * 3.0
-R : P-4 : WTP-4 : * : * 4.0
-R : P-4 : WTP-5 : * : * 4.0
-R : P-5 : WTP-5 : * : * 5.0
+T: p-2 : wtp-1 : wtp-1 1.0
+T: p-2 : wtp-2 : bought 1.0
+T: p-2 : wtp-3 : bought 1.0
+T: p-2 : wtp-4 : bought 1.0
+T: p-2 : wtp-5 : bought 1.0
+
+T: p-3 : wtp-1 : left 1.0
+T: p-3 : wtp-2 : wtp-2 1.0
+T: p-3 : wtp-3 : bought 1.0
+T: p-3 : wtp-4 : bought 1.0
+T: p-3 : wtp-5 : bought 1.0
+
+T: p-4 : wtp-1 : left 1.0
+T: p-4 : wtp-2 : left 1.0
+T: p-4 : wtp-3 : wtp-3 1.0
+T: p-4 : wtp-4 : bought 1.0
+T: p-4 : wtp-5 : bought 1.0
+
+T: p-5 : wtp-1 : left 1.0
+T: p-5 : wtp-2 : left 1.0
+T: p-5 : wtp-3 : wtp-3 1.0
+T: p-5 : wtp-4 : wtp-4 1.0
+T: p-5 : wtp-5 : bought 1.0
+
+O: * : * : pass-o 1.0
+O: * : bought : bought-o 1.0
+O: * : bought : pass-o 0.0
+O: * : left : left-o 1.0
+O: * : left : pass-o 0.0
+
+R : p-1 : * : bought : * 1.0
+R : p-2 : * : bought : * 2.0
+R : p-3 : * : bought : * 3.0
+R : p-4 : * : bought : * 4.0
+R : p-5 : * : bought : * 5.0
