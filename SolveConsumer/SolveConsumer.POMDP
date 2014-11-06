@@ -1,13 +1,14 @@
 discount: 0.95
 values: reward
-states: wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 bought left
+states: wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 bought left done
 actions: p-1 p-2 p-3 p-4 p-5
-observations: bought-o left-o pass-o
+observations: bought-o left-o pass-o done-o
 
 start include: wtp-1 wtp-2 wtp-3 wtp-4 wtp-5
 
-T: * : bought : bought 1.0
-T: * : left : left 1.0
+T: * : bought : done 1.0
+T: * : left : done 1.0
+T: * : done : done 1.0
 
 T: p-1 : wtp-1 : bought 1.0
 T: p-1 : wtp-2 : bought 1.0
@@ -39,11 +40,14 @@ T: p-5 : wtp-3 : wtp-3 1.0
 T: p-5 : wtp-4 : wtp-4 1.0
 T: p-5 : wtp-5 : bought 1.0
 
-O: * : * : pass-o 1.0
+O: * : wtp-1 : pass-o 1.0
+O: * : wtp-2 : pass-o 1.0
+O: * : wtp-3 : pass-o 1.0
+O: * : wtp-4 : pass-o 1.0
+O: * : wtp-5 : pass-o 1.0
 O: * : bought : bought-o 1.0
-O: * : bought : pass-o 0.0
 O: * : left : left-o 1.0
-O: * : left : pass-o 0.0
+O: * : done : done-o 1.0
 
 R : p-1 : * : bought : * 1.0
 R : p-2 : * : bought : * 2.0

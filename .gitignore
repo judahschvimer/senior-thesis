@@ -4,3 +4,4 @@ pomdp-solve-5.3/
 *.class
 *.alpha
 *.pg
+*.jar

@@ -189,7 +189,7 @@ public class ConsumerPOMDP implements DomainGenerator {
 
 		@Override
 		public State sampleObservation(State state, GroundedAction action){
-
+			System.out.println("get obs");
 			int price = Integer.parseInt(action.actionName().substring(5));
 			int wtp = state.getFirstObjectOfClass(CLASSCONSUMER).getDiscValForAttribute(ATTWTP);
 			ObjectInstance observation = state.getFirstObjectOfClass(CLASSOBSERVATION);
@@ -286,6 +286,9 @@ public class ConsumerPOMDP implements DomainGenerator {
         public double reward(State s, GroundedAction a, State sprime) {
 
             ObjectInstance observation = sprime.getFirstObjectOfClass(CLASSOBSERVATION);
+			System.out.println(s);
+			System.out.println(a);
+			System.out.println(sprime);
 			String curDecision = observation.getStringValForAttribute(ATTDECISION);
 			int curPrice = observation.getDiscValForAttribute(ATTPRICE);
 
@@ -356,17 +359,17 @@ public class ConsumerPOMDP implements DomainGenerator {
 
 		RewardFunction rf = new SellerRF();
 		TerminalFunction tf = new NullTermination();
-		//BeliefSarsa sarsa = new BeliefSarsa(domain, rf, tf, 0.99, 20, 1, true, 10., 0.1, 0.5, 10000);
-	    BeliefSparseSampling sparsesampling = new BeliefSparseSampling(domain, rf, tf, 0.99, 3, -1);
+		BeliefSarsa sarsa = new BeliefSarsa(domain, rf, tf, 0.99, 20, 1, true, 10., 0.1, 0.5, 10000);
+	    //BeliefSparseSampling sparsesampling = new BeliefSparseSampling(domain, rf, tf, 0.99, 3, -1);
 		BeliefState bs = ConsumerPOMDP.getInitialBeliefState(domain);
 
 		System.out.println("Begining sarsa planning.");
-		//sarsa.planFromBeliefState(bs);
-		sparsesampling.planFromBeliefState(bs);
+		sarsa.planFromBeliefState(bs);
+		//sparsesampling.planFromBeliefState(bs);
 		System.out.println("End sarsa planning.");
 
-		//Policy p = new GreedyQPolicy(sarsa);
-		Policy p = new GreedyQPolicy(sparsesampling);
+		Policy p = new GreedyQPolicy(sarsa);
+		//Policy p = new GreedyQPolicy(sparsesampling);
 
 		POEnvironment env = new POEnvironment(domain, rf, tf);
 		env.setCurMPDStateTo(bs.sampleStateFromBelief());
