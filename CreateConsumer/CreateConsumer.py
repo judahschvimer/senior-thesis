@@ -73,8 +73,8 @@ def main():
     discount = 0.95
     num_prices = 5
     values = 'reward'
-    wtps = range(1, num_prices + 1)
-    prices = range(1, num_prices + 1)
+    wtps = range(0, num_prices)
+    prices = range(0, num_prices)
 
     write_pomdp(out_file_name, discount, num_prices, values, prices, wtps)
 
