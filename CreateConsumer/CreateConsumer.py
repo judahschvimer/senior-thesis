@@ -18,15 +18,13 @@ def price(p):
 
 # Inputs: a willingness to pay and a price
 # Outputs: probability of leaving given the wtp and price
-def leave_function(price, wtp):
-    leave_probability = 0.2
-
+def leave_function(price, wtp, leave_probability):
     if price <= wtp:
         return 0
     else:
         return leave_probability
 
-def write_header(f, discount, num_prices, values, prices, wtps):
+def write_header(f, discount, values, prices, wtps):
     f.write('discount: {0}\n'.format(discount))
     f.write('values: {0}\n'.format(values))
     f.write('states: {0} done\n'.format(' '.join([wtp(p) for p in wtps])))
@@ -37,7 +35,7 @@ def write_header(f, discount, num_prices, values, prices, wtps):
     f.write('start include: {0}\n'.format(' '.join([wtp(p) for p in wtps])))
     f.write('\n')
 
-def write_transitions(f, prices, wtps):
+def write_transitions(f, prices, wtps, leave_probability):
     print_transition(f, '*', 'done', 'done', 1.0)
     f.write('\n')
     for p in prices:
@@ -45,9 +43,9 @@ def write_transitions(f, prices, wtps):
             if p <= w:
                 print_transition(f, price(p), wtp(w), 'done', 1.0)
             else:
-                leave_probability = leave_function(p, w)
-                print_transition(f, price(p), wtp(w), wtp(w), 1.0 - leave_probability)
-                print_transition(f, price(p), wtp(w), 'done', leave_probability)
+                trans_prob = leave_function(p, w, leave_probability)
+                print_transition(f, price(p), wtp(w), wtp(w), 1.0 - trans_prob)
+                print_transition(f, price(p), wtp(w), 'done', trans_prob)
         f.write('\n')
 
 def write_observations(f, prices, wtps):
@@ -61,10 +59,12 @@ def write_rewards(f, prices, wtps):
                 print_reward(f, price(p), wtp(w), 'done', '*', float(p))
         f.write('\n')
 
-def write_pomdp(out_file_name, discount, num_prices, values, prices, wtps):
+def write_pomdp(out_file_name, discount, num_prices, values, leave_probability):
+    wtps = range(0, num_prices)
+    prices = range(0, num_prices)
     with open(out_file_name, 'w') as f:
-        write_header(f, discount, num_prices, values, prices, wtps)
-        write_transitions(f, prices, wtps)
+        write_header(f, discount, values, prices, wtps)
+        write_transitions(f, prices, wtps, leave_probability)
         write_observations(f, prices, wtps)
         write_rewards(f, prices, wtps)
 
@@ -73,10 +73,9 @@ def main():
     discount = 0.95
     num_prices = 5
     values = 'reward'
-    wtps = range(0, num_prices)
-    prices = range(0, num_prices)
+    leave_probability = 0.2
 
-    write_pomdp(out_file_name, discount, num_prices, values, prices, wtps)
+    write_pomdp(out_file_name, discount, num_prices, values, leave_probability)
 
 if __name__ == '__main__':
     main()
