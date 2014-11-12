@@ -1,10 +1,10 @@
 discount: 0.95
 values: reward
-states: wtp-0 wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 wtp-6 done
-actions: p-0 p-1 p-2 p-3 p-4 p-5 p-6
+states: wtp-0 wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 wtp-6 wtp-7 wtp-8 wtp-9 wtp-10 wtp-11 wtp-12 wtp-13 wtp-14 wtp-15 wtp-16 wtp-17 wtp-18 wtp-19 done
+actions: p-0 p-1 p-2 p-3 p-4 p-5 p-6 p-7 p-8 p-9 p-10 p-11 p-12 p-13 p-14 p-15 p-16 p-17 p-18 p-19
 observations: o-1 o-2
 
-start include: wtp-0 wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 wtp-6
+start include: wtp-0 wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 wtp-6 wtp-7 wtp-8 wtp-9 wtp-10 wtp-11 wtp-12 wtp-13 wtp-14 wtp-15 wtp-16 wtp-17 wtp-18 wtp-19
 
 T : * : done : done 1.0
 
@@ -15,6 +15,19 @@ T : p-0 : wtp-3 : done 1.0
 T : p-0 : wtp-4 : done 1.0
 T : p-0 : wtp-5 : done 1.0
 T : p-0 : wtp-6 : done 1.0
+T : p-0 : wtp-7 : done 1.0
+T : p-0 : wtp-8 : done 1.0
+T : p-0 : wtp-9 : done 1.0
+T : p-0 : wtp-10 : done 1.0
+T : p-0 : wtp-11 : done 1.0
+T : p-0 : wtp-12 : done 1.0
+T : p-0 : wtp-13 : done 1.0
+T : p-0 : wtp-14 : done 1.0
+T : p-0 : wtp-15 : done 1.0
+T : p-0 : wtp-16 : done 1.0
+T : p-0 : wtp-17 : done 1.0
+T : p-0 : wtp-18 : done 1.0
+T : p-0 : wtp-19 : done 1.0
 
 T : p-1 : wtp-0 : wtp-0 1.0
 T : p-1 : wtp-0 : done 0
@@ -24,6 +37,19 @@ T : p-1 : wtp-3 : done 1.0
 T : p-1 : wtp-4 : done 1.0
 T : p-1 : wtp-5 : done 1.0
 T : p-1 : wtp-6 : done 1.0
+T : p-1 : wtp-7 : done 1.0
+T : p-1 : wtp-8 : done 1.0
+T : p-1 : wtp-9 : done 1.0
+T : p-1 : wtp-10 : done 1.0
+T : p-1 : wtp-11 : done 1.0
+T : p-1 : wtp-12 : done 1.0
+T : p-1 : wtp-13 : done 1.0
+T : p-1 : wtp-14 : done 1.0
+T : p-1 : wtp-15 : done 1.0
+T : p-1 : wtp-16 : done 1.0
+T : p-1 : wtp-17 : done 1.0
+T : p-1 : wtp-18 : done 1.0
+T : p-1 : wtp-19 : done 1.0
 
 T : p-2 : wtp-0 : wtp-0 1.0
 T : p-2 : wtp-0 : done 0
@@ -34,6 +60,19 @@ T : p-2 : wtp-3 : done 1.0
 T : p-2 : wtp-4 : done 1.0
 T : p-2 : wtp-5 : done 1.0
 T : p-2 : wtp-6 : done 1.0
+T : p-2 : wtp-7 : done 1.0
+T : p-2 : wtp-8 : done 1.0
+T : p-2 : wtp-9 : done 1.0
+T : p-2 : wtp-10 : done 1.0
+T : p-2 : wtp-11 : done 1.0
+T : p-2 : wtp-12 : done 1.0
+T : p-2 : wtp-13 : done 1.0
+T : p-2 : wtp-14 : done 1.0
+T : p-2 : wtp-15 : done 1.0
+T : p-2 : wtp-16 : done 1.0
+T : p-2 : wtp-17 : done 1.0
+T : p-2 : wtp-18 : done 1.0
+T : p-2 : wtp-19 : done 1.0
 
 T : p-3 : wtp-0 : wtp-0 1.0
 T : p-3 : wtp-0 : done 0
@@ -45,6 +84,19 @@ T : p-3 : wtp-3 : done 1.0
 T : p-3 : wtp-4 : done 1.0
 T : p-3 : wtp-5 : done 1.0
 T : p-3 : wtp-6 : done 1.0
+T : p-3 : wtp-7 : done 1.0
+T : p-3 : wtp-8 : done 1.0
+T : p-3 : wtp-9 : done 1.0
+T : p-3 : wtp-10 : done 1.0
+T : p-3 : wtp-11 : done 1.0
+T : p-3 : wtp-12 : done 1.0
+T : p-3 : wtp-13 : done 1.0
+T : p-3 : wtp-14 : done 1.0
+T : p-3 : wtp-15 : done 1.0
+T : p-3 : wtp-16 : done 1.0
+T : p-3 : wtp-17 : done 1.0
+T : p-3 : wtp-18 : done 1.0
+T : p-3 : wtp-19 : done 1.0
 
 T : p-4 : wtp-0 : wtp-0 1.0
 T : p-4 : wtp-0 : done 0
@@ -57,6 +109,19 @@ T : p-4 : wtp-3 : done 0
 T : p-4 : wtp-4 : done 1.0
 T : p-4 : wtp-5 : done 1.0
 T : p-4 : wtp-6 : done 1.0
+T : p-4 : wtp-7 : done 1.0
+T : p-4 : wtp-8 : done 1.0
+T : p-4 : wtp-9 : done 1.0
+T : p-4 : wtp-10 : done 1.0
+T : p-4 : wtp-11 : done 1.0
+T : p-4 : wtp-12 : done 1.0
+T : p-4 : wtp-13 : done 1.0
+T : p-4 : wtp-14 : done 1.0
+T : p-4 : wtp-15 : done 1.0
+T : p-4 : wtp-16 : done 1.0
+T : p-4 : wtp-17 : done 1.0
+T : p-4 : wtp-18 : done 1.0
+T : p-4 : wtp-19 : done 1.0
 
 T : p-5 : wtp-0 : wtp-0 1.0
 T : p-5 : wtp-0 : done 0
@@ -70,6 +135,19 @@ T : p-5 : wtp-4 : wtp-4 1.0
 T : p-5 : wtp-4 : done 0
 T : p-5 : wtp-5 : done 1.0
 T : p-5 : wtp-6 : done 1.0
+T : p-5 : wtp-7 : done 1.0
+T : p-5 : wtp-8 : done 1.0
+T : p-5 : wtp-9 : done 1.0
+T : p-5 : wtp-10 : done 1.0
+T : p-5 : wtp-11 : done 1.0
+T : p-5 : wtp-12 : done 1.0
+T : p-5 : wtp-13 : done 1.0
+T : p-5 : wtp-14 : done 1.0
+T : p-5 : wtp-15 : done 1.0
+T : p-5 : wtp-16 : done 1.0
+T : p-5 : wtp-17 : done 1.0
+T : p-5 : wtp-18 : done 1.0
+T : p-5 : wtp-19 : done 1.0
 
 T : p-6 : wtp-0 : wtp-0 1.0
 T : p-6 : wtp-0 : done 0
@@ -84,6 +162,461 @@ T : p-6 : wtp-4 : done 0
 T : p-6 : wtp-5 : wtp-5 1.0
 T : p-6 : wtp-5 : done 0
 T : p-6 : wtp-6 : done 1.0
+T : p-6 : wtp-7 : done 1.0
+T : p-6 : wtp-8 : done 1.0
+T : p-6 : wtp-9 : done 1.0
+T : p-6 : wtp-10 : done 1.0
+T : p-6 : wtp-11 : done 1.0
+T : p-6 : wtp-12 : done 1.0
+T : p-6 : wtp-13 : done 1.0
+T : p-6 : wtp-14 : done 1.0
+T : p-6 : wtp-15 : done 1.0
+T : p-6 : wtp-16 : done 1.0
+T : p-6 : wtp-17 : done 1.0
+T : p-6 : wtp-18 : done 1.0
+T : p-6 : wtp-19 : done 1.0
+
+T : p-7 : wtp-0 : wtp-0 1.0
+T : p-7 : wtp-0 : done 0
+T : p-7 : wtp-1 : wtp-1 1.0
+T : p-7 : wtp-1 : done 0
+T : p-7 : wtp-2 : wtp-2 1.0
+T : p-7 : wtp-2 : done 0
+T : p-7 : wtp-3 : wtp-3 1.0
+T : p-7 : wtp-3 : done 0
+T : p-7 : wtp-4 : wtp-4 1.0
+T : p-7 : wtp-4 : done 0
+T : p-7 : wtp-5 : wtp-5 1.0
+T : p-7 : wtp-5 : done 0
+T : p-7 : wtp-6 : wtp-6 1.0
+T : p-7 : wtp-6 : done 0
+T : p-7 : wtp-7 : done 1.0
+T : p-7 : wtp-8 : done 1.0
+T : p-7 : wtp-9 : done 1.0
+T : p-7 : wtp-10 : done 1.0
+T : p-7 : wtp-11 : done 1.0
+T : p-7 : wtp-12 : done 1.0
+T : p-7 : wtp-13 : done 1.0
+T : p-7 : wtp-14 : done 1.0
+T : p-7 : wtp-15 : done 1.0
+T : p-7 : wtp-16 : done 1.0
+T : p-7 : wtp-17 : done 1.0
+T : p-7 : wtp-18 : done 1.0
+T : p-7 : wtp-19 : done 1.0
+
+T : p-8 : wtp-0 : wtp-0 1.0
+T : p-8 : wtp-0 : done 0
+T : p-8 : wtp-1 : wtp-1 1.0
+T : p-8 : wtp-1 : done 0
+T : p-8 : wtp-2 : wtp-2 1.0
+T : p-8 : wtp-2 : done 0
+T : p-8 : wtp-3 : wtp-3 1.0
+T : p-8 : wtp-3 : done 0
+T : p-8 : wtp-4 : wtp-4 1.0
+T : p-8 : wtp-4 : done 0
+T : p-8 : wtp-5 : wtp-5 1.0
+T : p-8 : wtp-5 : done 0
+T : p-8 : wtp-6 : wtp-6 1.0
+T : p-8 : wtp-6 : done 0
+T : p-8 : wtp-7 : wtp-7 1.0
+T : p-8 : wtp-7 : done 0
+T : p-8 : wtp-8 : done 1.0
+T : p-8 : wtp-9 : done 1.0
+T : p-8 : wtp-10 : done 1.0
+T : p-8 : wtp-11 : done 1.0
+T : p-8 : wtp-12 : done 1.0
+T : p-8 : wtp-13 : done 1.0
+T : p-8 : wtp-14 : done 1.0
+T : p-8 : wtp-15 : done 1.0
+T : p-8 : wtp-16 : done 1.0
+T : p-8 : wtp-17 : done 1.0
+T : p-8 : wtp-18 : done 1.0
+T : p-8 : wtp-19 : done 1.0
+
+T : p-9 : wtp-0 : wtp-0 1.0
+T : p-9 : wtp-0 : done 0
+T : p-9 : wtp-1 : wtp-1 1.0
+T : p-9 : wtp-1 : done 0
+T : p-9 : wtp-2 : wtp-2 1.0
+T : p-9 : wtp-2 : done 0
+T : p-9 : wtp-3 : wtp-3 1.0
+T : p-9 : wtp-3 : done 0
+T : p-9 : wtp-4 : wtp-4 1.0
+T : p-9 : wtp-4 : done 0
+T : p-9 : wtp-5 : wtp-5 1.0
+T : p-9 : wtp-5 : done 0
+T : p-9 : wtp-6 : wtp-6 1.0
+T : p-9 : wtp-6 : done 0
+T : p-9 : wtp-7 : wtp-7 1.0
+T : p-9 : wtp-7 : done 0
+T : p-9 : wtp-8 : wtp-8 1.0
+T : p-9 : wtp-8 : done 0
+T : p-9 : wtp-9 : done 1.0
+T : p-9 : wtp-10 : done 1.0
+T : p-9 : wtp-11 : done 1.0
+T : p-9 : wtp-12 : done 1.0
+T : p-9 : wtp-13 : done 1.0
+T : p-9 : wtp-14 : done 1.0
+T : p-9 : wtp-15 : done 1.0
+T : p-9 : wtp-16 : done 1.0
+T : p-9 : wtp-17 : done 1.0
+T : p-9 : wtp-18 : done 1.0
+T : p-9 : wtp-19 : done 1.0
+
+T : p-10 : wtp-0 : wtp-0 1.0
+T : p-10 : wtp-0 : done 0
+T : p-10 : wtp-1 : wtp-1 1.0
+T : p-10 : wtp-1 : done 0
+T : p-10 : wtp-2 : wtp-2 1.0
+T : p-10 : wtp-2 : done 0
+T : p-10 : wtp-3 : wtp-3 1.0
+T : p-10 : wtp-3 : done 0
+T : p-10 : wtp-4 : wtp-4 1.0
+T : p-10 : wtp-4 : done 0
+T : p-10 : wtp-5 : wtp-5 1.0
+T : p-10 : wtp-5 : done 0
+T : p-10 : wtp-6 : wtp-6 1.0
+T : p-10 : wtp-6 : done 0
+T : p-10 : wtp-7 : wtp-7 1.0
+T : p-10 : wtp-7 : done 0
+T : p-10 : wtp-8 : wtp-8 1.0
+T : p-10 : wtp-8 : done 0
+T : p-10 : wtp-9 : wtp-9 1.0
+T : p-10 : wtp-9 : done 0
+T : p-10 : wtp-10 : done 1.0
+T : p-10 : wtp-11 : done 1.0
+T : p-10 : wtp-12 : done 1.0
+T : p-10 : wtp-13 : done 1.0
+T : p-10 : wtp-14 : done 1.0
+T : p-10 : wtp-15 : done 1.0
+T : p-10 : wtp-16 : done 1.0
+T : p-10 : wtp-17 : done 1.0
+T : p-10 : wtp-18 : done 1.0
+T : p-10 : wtp-19 : done 1.0
+
+T : p-11 : wtp-0 : wtp-0 1.0
+T : p-11 : wtp-0 : done 0
+T : p-11 : wtp-1 : wtp-1 1.0
+T : p-11 : wtp-1 : done 0
+T : p-11 : wtp-2 : wtp-2 1.0
+T : p-11 : wtp-2 : done 0
+T : p-11 : wtp-3 : wtp-3 1.0
+T : p-11 : wtp-3 : done 0
+T : p-11 : wtp-4 : wtp-4 1.0
+T : p-11 : wtp-4 : done 0
+T : p-11 : wtp-5 : wtp-5 1.0
+T : p-11 : wtp-5 : done 0
+T : p-11 : wtp-6 : wtp-6 1.0
+T : p-11 : wtp-6 : done 0
+T : p-11 : wtp-7 : wtp-7 1.0
+T : p-11 : wtp-7 : done 0
+T : p-11 : wtp-8 : wtp-8 1.0
+T : p-11 : wtp-8 : done 0
+T : p-11 : wtp-9 : wtp-9 1.0
+T : p-11 : wtp-9 : done 0
+T : p-11 : wtp-10 : wtp-10 1.0
+T : p-11 : wtp-10 : done 0
+T : p-11 : wtp-11 : done 1.0
+T : p-11 : wtp-12 : done 1.0
+T : p-11 : wtp-13 : done 1.0
+T : p-11 : wtp-14 : done 1.0
+T : p-11 : wtp-15 : done 1.0
+T : p-11 : wtp-16 : done 1.0
+T : p-11 : wtp-17 : done 1.0
+T : p-11 : wtp-18 : done 1.0
+T : p-11 : wtp-19 : done 1.0
+
+T : p-12 : wtp-0 : wtp-0 1.0
+T : p-12 : wtp-0 : done 0
+T : p-12 : wtp-1 : wtp-1 1.0
+T : p-12 : wtp-1 : done 0
+T : p-12 : wtp-2 : wtp-2 1.0
+T : p-12 : wtp-2 : done 0
+T : p-12 : wtp-3 : wtp-3 1.0
+T : p-12 : wtp-3 : done 0
+T : p-12 : wtp-4 : wtp-4 1.0
+T : p-12 : wtp-4 : done 0
+T : p-12 : wtp-5 : wtp-5 1.0
+T : p-12 : wtp-5 : done 0
+T : p-12 : wtp-6 : wtp-6 1.0
+T : p-12 : wtp-6 : done 0
+T : p-12 : wtp-7 : wtp-7 1.0
+T : p-12 : wtp-7 : done 0
+T : p-12 : wtp-8 : wtp-8 1.0
+T : p-12 : wtp-8 : done 0
+T : p-12 : wtp-9 : wtp-9 1.0
+T : p-12 : wtp-9 : done 0
+T : p-12 : wtp-10 : wtp-10 1.0
+T : p-12 : wtp-10 : done 0
+T : p-12 : wtp-11 : wtp-11 1.0
+T : p-12 : wtp-11 : done 0
+T : p-12 : wtp-12 : done 1.0
+T : p-12 : wtp-13 : done 1.0
+T : p-12 : wtp-14 : done 1.0
+T : p-12 : wtp-15 : done 1.0
+T : p-12 : wtp-16 : done 1.0
+T : p-12 : wtp-17 : done 1.0
+T : p-12 : wtp-18 : done 1.0
+T : p-12 : wtp-19 : done 1.0
+
+T : p-13 : wtp-0 : wtp-0 1.0
+T : p-13 : wtp-0 : done 0
+T : p-13 : wtp-1 : wtp-1 1.0
+T : p-13 : wtp-1 : done 0
+T : p-13 : wtp-2 : wtp-2 1.0
+T : p-13 : wtp-2 : done 0
+T : p-13 : wtp-3 : wtp-3 1.0
+T : p-13 : wtp-3 : done 0
+T : p-13 : wtp-4 : wtp-4 1.0
+T : p-13 : wtp-4 : done 0
+T : p-13 : wtp-5 : wtp-5 1.0
+T : p-13 : wtp-5 : done 0
+T : p-13 : wtp-6 : wtp-6 1.0
+T : p-13 : wtp-6 : done 0
+T : p-13 : wtp-7 : wtp-7 1.0
+T : p-13 : wtp-7 : done 0
+T : p-13 : wtp-8 : wtp-8 1.0
+T : p-13 : wtp-8 : done 0
+T : p-13 : wtp-9 : wtp-9 1.0
+T : p-13 : wtp-9 : done 0
+T : p-13 : wtp-10 : wtp-10 1.0
+T : p-13 : wtp-10 : done 0
+T : p-13 : wtp-11 : wtp-11 1.0
+T : p-13 : wtp-11 : done 0
+T : p-13 : wtp-12 : wtp-12 1.0
+T : p-13 : wtp-12 : done 0
+T : p-13 : wtp-13 : done 1.0
+T : p-13 : wtp-14 : done 1.0
+T : p-13 : wtp-15 : done 1.0
+T : p-13 : wtp-16 : done 1.0
+T : p-13 : wtp-17 : done 1.0
+T : p-13 : wtp-18 : done 1.0
+T : p-13 : wtp-19 : done 1.0
+
+T : p-14 : wtp-0 : wtp-0 1.0
+T : p-14 : wtp-0 : done 0
+T : p-14 : wtp-1 : wtp-1 1.0
+T : p-14 : wtp-1 : done 0
+T : p-14 : wtp-2 : wtp-2 1.0
+T : p-14 : wtp-2 : done 0
+T : p-14 : wtp-3 : wtp-3 1.0
+T : p-14 : wtp-3 : done 0
+T : p-14 : wtp-4 : wtp-4 1.0
+T : p-14 : wtp-4 : done 0
+T : p-14 : wtp-5 : wtp-5 1.0
+T : p-14 : wtp-5 : done 0
+T : p-14 : wtp-6 : wtp-6 1.0
+T : p-14 : wtp-6 : done 0
+T : p-14 : wtp-7 : wtp-7 1.0
+T : p-14 : wtp-7 : done 0
+T : p-14 : wtp-8 : wtp-8 1.0
+T : p-14 : wtp-8 : done 0
+T : p-14 : wtp-9 : wtp-9 1.0
+T : p-14 : wtp-9 : done 0
+T : p-14 : wtp-10 : wtp-10 1.0
+T : p-14 : wtp-10 : done 0
+T : p-14 : wtp-11 : wtp-11 1.0
+T : p-14 : wtp-11 : done 0
+T : p-14 : wtp-12 : wtp-12 1.0
+T : p-14 : wtp-12 : done 0
+T : p-14 : wtp-13 : wtp-13 1.0
+T : p-14 : wtp-13 : done 0
+T : p-14 : wtp-14 : done 1.0
+T : p-14 : wtp-15 : done 1.0
+T : p-14 : wtp-16 : done 1.0
+T : p-14 : wtp-17 : done 1.0
+T : p-14 : wtp-18 : done 1.0
+T : p-14 : wtp-19 : done 1.0
+
+T : p-15 : wtp-0 : wtp-0 1.0
+T : p-15 : wtp-0 : done 0
+T : p-15 : wtp-1 : wtp-1 1.0
+T : p-15 : wtp-1 : done 0
+T : p-15 : wtp-2 : wtp-2 1.0
+T : p-15 : wtp-2 : done 0
+T : p-15 : wtp-3 : wtp-3 1.0
+T : p-15 : wtp-3 : done 0
+T : p-15 : wtp-4 : wtp-4 1.0
+T : p-15 : wtp-4 : done 0
+T : p-15 : wtp-5 : wtp-5 1.0
+T : p-15 : wtp-5 : done 0
+T : p-15 : wtp-6 : wtp-6 1.0
+T : p-15 : wtp-6 : done 0
+T : p-15 : wtp-7 : wtp-7 1.0
+T : p-15 : wtp-7 : done 0
+T : p-15 : wtp-8 : wtp-8 1.0
+T : p-15 : wtp-8 : done 0
+T : p-15 : wtp-9 : wtp-9 1.0
+T : p-15 : wtp-9 : done 0
+T : p-15 : wtp-10 : wtp-10 1.0
+T : p-15 : wtp-10 : done 0
+T : p-15 : wtp-11 : wtp-11 1.0
+T : p-15 : wtp-11 : done 0
+T : p-15 : wtp-12 : wtp-12 1.0
+T : p-15 : wtp-12 : done 0
+T : p-15 : wtp-13 : wtp-13 1.0
+T : p-15 : wtp-13 : done 0
+T : p-15 : wtp-14 : wtp-14 1.0
+T : p-15 : wtp-14 : done 0
+T : p-15 : wtp-15 : done 1.0
+T : p-15 : wtp-16 : done 1.0
+T : p-15 : wtp-17 : done 1.0
+T : p-15 : wtp-18 : done 1.0
+T : p-15 : wtp-19 : done 1.0
+
+T : p-16 : wtp-0 : wtp-0 1.0
+T : p-16 : wtp-0 : done 0
+T : p-16 : wtp-1 : wtp-1 1.0
+T : p-16 : wtp-1 : done 0
+T : p-16 : wtp-2 : wtp-2 1.0
+T : p-16 : wtp-2 : done 0
+T : p-16 : wtp-3 : wtp-3 1.0
+T : p-16 : wtp-3 : done 0
+T : p-16 : wtp-4 : wtp-4 1.0
+T : p-16 : wtp-4 : done 0
+T : p-16 : wtp-5 : wtp-5 1.0
+T : p-16 : wtp-5 : done 0
+T : p-16 : wtp-6 : wtp-6 1.0
+T : p-16 : wtp-6 : done 0
+T : p-16 : wtp-7 : wtp-7 1.0
+T : p-16 : wtp-7 : done 0
+T : p-16 : wtp-8 : wtp-8 1.0
+T : p-16 : wtp-8 : done 0
+T : p-16 : wtp-9 : wtp-9 1.0
+T : p-16 : wtp-9 : done 0
+T : p-16 : wtp-10 : wtp-10 1.0
+T : p-16 : wtp-10 : done 0
+T : p-16 : wtp-11 : wtp-11 1.0
+T : p-16 : wtp-11 : done 0
+T : p-16 : wtp-12 : wtp-12 1.0
+T : p-16 : wtp-12 : done 0
+T : p-16 : wtp-13 : wtp-13 1.0
+T : p-16 : wtp-13 : done 0
+T : p-16 : wtp-14 : wtp-14 1.0
+T : p-16 : wtp-14 : done 0
+T : p-16 : wtp-15 : wtp-15 1.0
+T : p-16 : wtp-15 : done 0
+T : p-16 : wtp-16 : done 1.0
+T : p-16 : wtp-17 : done 1.0
+T : p-16 : wtp-18 : done 1.0
+T : p-16 : wtp-19 : done 1.0
+
+T : p-17 : wtp-0 : wtp-0 1.0
+T : p-17 : wtp-0 : done 0
+T : p-17 : wtp-1 : wtp-1 1.0
+T : p-17 : wtp-1 : done 0
+T : p-17 : wtp-2 : wtp-2 1.0
+T : p-17 : wtp-2 : done 0
+T : p-17 : wtp-3 : wtp-3 1.0
+T : p-17 : wtp-3 : done 0
+T : p-17 : wtp-4 : wtp-4 1.0
+T : p-17 : wtp-4 : done 0
+T : p-17 : wtp-5 : wtp-5 1.0
+T : p-17 : wtp-5 : done 0
+T : p-17 : wtp-6 : wtp-6 1.0
+T : p-17 : wtp-6 : done 0
+T : p-17 : wtp-7 : wtp-7 1.0
+T : p-17 : wtp-7 : done 0
+T : p-17 : wtp-8 : wtp-8 1.0
+T : p-17 : wtp-8 : done 0
+T : p-17 : wtp-9 : wtp-9 1.0
+T : p-17 : wtp-9 : done 0
+T : p-17 : wtp-10 : wtp-10 1.0
+T : p-17 : wtp-10 : done 0
+T : p-17 : wtp-11 : wtp-11 1.0
+T : p-17 : wtp-11 : done 0
+T : p-17 : wtp-12 : wtp-12 1.0
+T : p-17 : wtp-12 : done 0
+T : p-17 : wtp-13 : wtp-13 1.0
+T : p-17 : wtp-13 : done 0
+T : p-17 : wtp-14 : wtp-14 1.0
+T : p-17 : wtp-14 : done 0
+T : p-17 : wtp-15 : wtp-15 1.0
+T : p-17 : wtp-15 : done 0
+T : p-17 : wtp-16 : wtp-16 1.0
+T : p-17 : wtp-16 : done 0
+T : p-17 : wtp-17 : done 1.0
+T : p-17 : wtp-18 : done 1.0
+T : p-17 : wtp-19 : done 1.0
+
+T : p-18 : wtp-0 : wtp-0 1.0
+T : p-18 : wtp-0 : done 0
+T : p-18 : wtp-1 : wtp-1 1.0
+T : p-18 : wtp-1 : done 0
+T : p-18 : wtp-2 : wtp-2 1.0
+T : p-18 : wtp-2 : done 0
+T : p-18 : wtp-3 : wtp-3 1.0
+T : p-18 : wtp-3 : done 0
+T : p-18 : wtp-4 : wtp-4 1.0
+T : p-18 : wtp-4 : done 0
+T : p-18 : wtp-5 : wtp-5 1.0
+T : p-18 : wtp-5 : done 0
+T : p-18 : wtp-6 : wtp-6 1.0
+T : p-18 : wtp-6 : done 0
+T : p-18 : wtp-7 : wtp-7 1.0
+T : p-18 : wtp-7 : done 0
+T : p-18 : wtp-8 : wtp-8 1.0
+T : p-18 : wtp-8 : done 0
+T : p-18 : wtp-9 : wtp-9 1.0
+T : p-18 : wtp-9 : done 0
+T : p-18 : wtp-10 : wtp-10 1.0
+T : p-18 : wtp-10 : done 0
+T : p-18 : wtp-11 : wtp-11 1.0
+T : p-18 : wtp-11 : done 0
+T : p-18 : wtp-12 : wtp-12 1.0
+T : p-18 : wtp-12 : done 0
+T : p-18 : wtp-13 : wtp-13 1.0
+T : p-18 : wtp-13 : done 0
+T : p-18 : wtp-14 : wtp-14 1.0
+T : p-18 : wtp-14 : done 0
+T : p-18 : wtp-15 : wtp-15 1.0
+T : p-18 : wtp-15 : done 0
+T : p-18 : wtp-16 : wtp-16 1.0
+T : p-18 : wtp-16 : done 0
+T : p-18 : wtp-17 : wtp-17 1.0
+T : p-18 : wtp-17 : done 0
+T : p-18 : wtp-18 : done 1.0
+T : p-18 : wtp-19 : done 1.0
+
+T : p-19 : wtp-0 : wtp-0 1.0
+T : p-19 : wtp-0 : done 0
+T : p-19 : wtp-1 : wtp-1 1.0
+T : p-19 : wtp-1 : done 0
+T : p-19 : wtp-2 : wtp-2 1.0
+T : p-19 : wtp-2 : done 0
+T : p-19 : wtp-3 : wtp-3 1.0
+T : p-19 : wtp-3 : done 0
+T : p-19 : wtp-4 : wtp-4 1.0
+T : p-19 : wtp-4 : done 0
+T : p-19 : wtp-5 : wtp-5 1.0
+T : p-19 : wtp-5 : done 0
+T : p-19 : wtp-6 : wtp-6 1.0
+T : p-19 : wtp-6 : done 0
+T : p-19 : wtp-7 : wtp-7 1.0
+T : p-19 : wtp-7 : done 0
+T : p-19 : wtp-8 : wtp-8 1.0
+T : p-19 : wtp-8 : done 0
+T : p-19 : wtp-9 : wtp-9 1.0
+T : p-19 : wtp-9 : done 0
+T : p-19 : wtp-10 : wtp-10 1.0
+T : p-19 : wtp-10 : done 0
+T : p-19 : wtp-11 : wtp-11 1.0
+T : p-19 : wtp-11 : done 0
+T : p-19 : wtp-12 : wtp-12 1.0
+T : p-19 : wtp-12 : done 0
+T : p-19 : wtp-13 : wtp-13 1.0
+T : p-19 : wtp-13 : done 0
+T : p-19 : wtp-14 : wtp-14 1.0
+T : p-19 : wtp-14 : done 0
+T : p-19 : wtp-15 : wtp-15 1.0
+T : p-19 : wtp-15 : done 0
+T : p-19 : wtp-16 : wtp-16 1.0
+T : p-19 : wtp-16 : done 0
+T : p-19 : wtp-17 : wtp-17 1.0
+T : p-19 : wtp-17 : done 0
+T : p-19 : wtp-18 : wtp-18 1.0
+T : p-19 : wtp-18 : done 0
+T : p-19 : wtp-19 : done 1.0
 
 O : * : * : o-1 1.0
 
@@ -94,6 +627,19 @@ R : p-0 : wtp-3 : done : * 0.0
 R : p-0 : wtp-4 : done : * 0.0
 R : p-0 : wtp-5 : done : * 0.0
 R : p-0 : wtp-6 : done : * 0.0
+R : p-0 : wtp-7 : done : * 0.0
+R : p-0 : wtp-8 : done : * 0.0
+R : p-0 : wtp-9 : done : * 0.0
+R : p-0 : wtp-10 : done : * 0.0
+R : p-0 : wtp-11 : done : * 0.0
+R : p-0 : wtp-12 : done : * 0.0
+R : p-0 : wtp-13 : done : * 0.0
+R : p-0 : wtp-14 : done : * 0.0
+R : p-0 : wtp-15 : done : * 0.0
+R : p-0 : wtp-16 : done : * 0.0
+R : p-0 : wtp-17 : done : * 0.0
+R : p-0 : wtp-18 : done : * 0.0
+R : p-0 : wtp-19 : done : * 0.0
 
 R : p-1 : wtp-1 : done : * 1.0
 R : p-1 : wtp-2 : done : * 1.0
@@ -101,24 +647,206 @@ R : p-1 : wtp-3 : done : * 1.0
 R : p-1 : wtp-4 : done : * 1.0
 R : p-1 : wtp-5 : done : * 1.0
 R : p-1 : wtp-6 : done : * 1.0
+R : p-1 : wtp-7 : done : * 1.0
+R : p-1 : wtp-8 : done : * 1.0
+R : p-1 : wtp-9 : done : * 1.0
+R : p-1 : wtp-10 : done : * 1.0
+R : p-1 : wtp-11 : done : * 1.0
+R : p-1 : wtp-12 : done : * 1.0
+R : p-1 : wtp-13 : done : * 1.0
+R : p-1 : wtp-14 : done : * 1.0
+R : p-1 : wtp-15 : done : * 1.0
+R : p-1 : wtp-16 : done : * 1.0
+R : p-1 : wtp-17 : done : * 1.0
+R : p-1 : wtp-18 : done : * 1.0
+R : p-1 : wtp-19 : done : * 1.0
 
 R : p-2 : wtp-2 : done : * 2.0
 R : p-2 : wtp-3 : done : * 2.0
 R : p-2 : wtp-4 : done : * 2.0
 R : p-2 : wtp-5 : done : * 2.0
 R : p-2 : wtp-6 : done : * 2.0
+R : p-2 : wtp-7 : done : * 2.0
+R : p-2 : wtp-8 : done : * 2.0
+R : p-2 : wtp-9 : done : * 2.0
+R : p-2 : wtp-10 : done : * 2.0
+R : p-2 : wtp-11 : done : * 2.0
+R : p-2 : wtp-12 : done : * 2.0
+R : p-2 : wtp-13 : done : * 2.0
+R : p-2 : wtp-14 : done : * 2.0
+R : p-2 : wtp-15 : done : * 2.0
+R : p-2 : wtp-16 : done : * 2.0
+R : p-2 : wtp-17 : done : * 2.0
+R : p-2 : wtp-18 : done : * 2.0
+R : p-2 : wtp-19 : done : * 2.0
 
 R : p-3 : wtp-3 : done : * 3.0
 R : p-3 : wtp-4 : done : * 3.0
 R : p-3 : wtp-5 : done : * 3.0
 R : p-3 : wtp-6 : done : * 3.0
+R : p-3 : wtp-7 : done : * 3.0
+R : p-3 : wtp-8 : done : * 3.0
+R : p-3 : wtp-9 : done : * 3.0
+R : p-3 : wtp-10 : done : * 3.0
+R : p-3 : wtp-11 : done : * 3.0
+R : p-3 : wtp-12 : done : * 3.0
+R : p-3 : wtp-13 : done : * 3.0
+R : p-3 : wtp-14 : done : * 3.0
+R : p-3 : wtp-15 : done : * 3.0
+R : p-3 : wtp-16 : done : * 3.0
+R : p-3 : wtp-17 : done : * 3.0
+R : p-3 : wtp-18 : done : * 3.0
+R : p-3 : wtp-19 : done : * 3.0
 
 R : p-4 : wtp-4 : done : * 4.0
 R : p-4 : wtp-5 : done : * 4.0
 R : p-4 : wtp-6 : done : * 4.0
+R : p-4 : wtp-7 : done : * 4.0
+R : p-4 : wtp-8 : done : * 4.0
+R : p-4 : wtp-9 : done : * 4.0
+R : p-4 : wtp-10 : done : * 4.0
+R : p-4 : wtp-11 : done : * 4.0
+R : p-4 : wtp-12 : done : * 4.0
+R : p-4 : wtp-13 : done : * 4.0
+R : p-4 : wtp-14 : done : * 4.0
+R : p-4 : wtp-15 : done : * 4.0
+R : p-4 : wtp-16 : done : * 4.0
+R : p-4 : wtp-17 : done : * 4.0
+R : p-4 : wtp-18 : done : * 4.0
+R : p-4 : wtp-19 : done : * 4.0
 
 R : p-5 : wtp-5 : done : * 5.0
 R : p-5 : wtp-6 : done : * 5.0
+R : p-5 : wtp-7 : done : * 5.0
+R : p-5 : wtp-8 : done : * 5.0
+R : p-5 : wtp-9 : done : * 5.0
+R : p-5 : wtp-10 : done : * 5.0
+R : p-5 : wtp-11 : done : * 5.0
+R : p-5 : wtp-12 : done : * 5.0
+R : p-5 : wtp-13 : done : * 5.0
+R : p-5 : wtp-14 : done : * 5.0
+R : p-5 : wtp-15 : done : * 5.0
+R : p-5 : wtp-16 : done : * 5.0
+R : p-5 : wtp-17 : done : * 5.0
+R : p-5 : wtp-18 : done : * 5.0
+R : p-5 : wtp-19 : done : * 5.0
 
 R : p-6 : wtp-6 : done : * 6.0
+R : p-6 : wtp-7 : done : * 6.0
+R : p-6 : wtp-8 : done : * 6.0
+R : p-6 : wtp-9 : done : * 6.0
+R : p-6 : wtp-10 : done : * 6.0
+R : p-6 : wtp-11 : done : * 6.0
+R : p-6 : wtp-12 : done : * 6.0
+R : p-6 : wtp-13 : done : * 6.0
+R : p-6 : wtp-14 : done : * 6.0
+R : p-6 : wtp-15 : done : * 6.0
+R : p-6 : wtp-16 : done : * 6.0
+R : p-6 : wtp-17 : done : * 6.0
+R : p-6 : wtp-18 : done : * 6.0
+R : p-6 : wtp-19 : done : * 6.0
+
+R : p-7 : wtp-7 : done : * 7.0
+R : p-7 : wtp-8 : done : * 7.0
+R : p-7 : wtp-9 : done : * 7.0
+R : p-7 : wtp-10 : done : * 7.0
+R : p-7 : wtp-11 : done : * 7.0
+R : p-7 : wtp-12 : done : * 7.0
+R : p-7 : wtp-13 : done : * 7.0
+R : p-7 : wtp-14 : done : * 7.0
+R : p-7 : wtp-15 : done : * 7.0
+R : p-7 : wtp-16 : done : * 7.0
+R : p-7 : wtp-17 : done : * 7.0
+R : p-7 : wtp-18 : done : * 7.0
+R : p-7 : wtp-19 : done : * 7.0
+
+R : p-8 : wtp-8 : done : * 8.0
+R : p-8 : wtp-9 : done : * 8.0
+R : p-8 : wtp-10 : done : * 8.0
+R : p-8 : wtp-11 : done : * 8.0
+R : p-8 : wtp-12 : done : * 8.0
+R : p-8 : wtp-13 : done : * 8.0
+R : p-8 : wtp-14 : done : * 8.0
+R : p-8 : wtp-15 : done : * 8.0
+R : p-8 : wtp-16 : done : * 8.0
+R : p-8 : wtp-17 : done : * 8.0
+R : p-8 : wtp-18 : done : * 8.0
+R : p-8 : wtp-19 : done : * 8.0
+
+R : p-9 : wtp-9 : done : * 9.0
+R : p-9 : wtp-10 : done : * 9.0
+R : p-9 : wtp-11 : done : * 9.0
+R : p-9 : wtp-12 : done : * 9.0
+R : p-9 : wtp-13 : done : * 9.0
+R : p-9 : wtp-14 : done : * 9.0
+R : p-9 : wtp-15 : done : * 9.0
+R : p-9 : wtp-16 : done : * 9.0
+R : p-9 : wtp-17 : done : * 9.0
+R : p-9 : wtp-18 : done : * 9.0
+R : p-9 : wtp-19 : done : * 9.0
+
+R : p-10 : wtp-10 : done : * 10.0
+R : p-10 : wtp-11 : done : * 10.0
+R : p-10 : wtp-12 : done : * 10.0
+R : p-10 : wtp-13 : done : * 10.0
+R : p-10 : wtp-14 : done : * 10.0
+R : p-10 : wtp-15 : done : * 10.0
+R : p-10 : wtp-16 : done : * 10.0
+R : p-10 : wtp-17 : done : * 10.0
+R : p-10 : wtp-18 : done : * 10.0
+R : p-10 : wtp-19 : done : * 10.0
+
+R : p-11 : wtp-11 : done : * 11.0
+R : p-11 : wtp-12 : done : * 11.0
+R : p-11 : wtp-13 : done : * 11.0
+R : p-11 : wtp-14 : done : * 11.0
+R : p-11 : wtp-15 : done : * 11.0
+R : p-11 : wtp-16 : done : * 11.0
+R : p-11 : wtp-17 : done : * 11.0
+R : p-11 : wtp-18 : done : * 11.0
+R : p-11 : wtp-19 : done : * 11.0
+
+R : p-12 : wtp-12 : done : * 12.0
+R : p-12 : wtp-13 : done : * 12.0
+R : p-12 : wtp-14 : done : * 12.0
+R : p-12 : wtp-15 : done : * 12.0
+R : p-12 : wtp-16 : done : * 12.0
+R : p-12 : wtp-17 : done : * 12.0
+R : p-12 : wtp-18 : done : * 12.0
+R : p-12 : wtp-19 : done : * 12.0
+
+R : p-13 : wtp-13 : done : * 13.0
+R : p-13 : wtp-14 : done : * 13.0
+R : p-13 : wtp-15 : done : * 13.0
+R : p-13 : wtp-16 : done : * 13.0
+R : p-13 : wtp-17 : done : * 13.0
+R : p-13 : wtp-18 : done : * 13.0
+R : p-13 : wtp-19 : done : * 13.0
+
+R : p-14 : wtp-14 : done : * 14.0
+R : p-14 : wtp-15 : done : * 14.0
+R : p-14 : wtp-16 : done : * 14.0
+R : p-14 : wtp-17 : done : * 14.0
+R : p-14 : wtp-18 : done : * 14.0
+R : p-14 : wtp-19 : done : * 14.0
+
+R : p-15 : wtp-15 : done : * 15.0
+R : p-15 : wtp-16 : done : * 15.0
+R : p-15 : wtp-17 : done : * 15.0
+R : p-15 : wtp-18 : done : * 15.0
+R : p-15 : wtp-19 : done : * 15.0
+
+R : p-16 : wtp-16 : done : * 16.0
+R : p-16 : wtp-17 : done : * 16.0
+R : p-16 : wtp-18 : done : * 16.0
+R : p-16 : wtp-19 : done : * 16.0
+
+R : p-17 : wtp-17 : done : * 17.0
+R : p-17 : wtp-18 : done : * 17.0
+R : p-17 : wtp-19 : done : * 17.0
+
+R : p-18 : wtp-18 : done : * 18.0
+R : p-18 : wtp-19 : done : * 18.0
+
+R : p-19 : wtp-19 : done : * 19.0
 

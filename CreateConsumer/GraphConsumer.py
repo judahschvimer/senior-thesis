@@ -44,12 +44,13 @@ def get_list_of_actions(file_base, start):
                         bargaining = False
                 return actions
 
-def solve_pomdp(leave_probability, num_prices):
+def solve_pomdp(leave_probability, num_prices, epsilon):
     discount = 0.95
     values = 'reward'
-    file_base = 'p-{0}'.format(leave_probability)
+    file_base = filebase(leave_probability)
+
     CreateConsumer.write_pomdp(file_base + '.POMDP', discount, num_prices, values, leave_probability)
-    subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_base + '.POMDP'])
+    subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_base + '.POMDP', '-epsilon', str(epsilon)])
     return file_base
 
 
@@ -62,30 +63,57 @@ def transform_list(strategy_list):
         for k, v in strategy_list.items():
             if len(v) > idx:
                 index_list.append((k, v[idx]))
-        index_lists[idx] = index_list
+                index_lists[idx] = sorted(index_list, key = lambda x: x[0])
     return index_lists
 
-
-def parse_files(initial_belief_state, num_prices):
+def parse_files(step, initial_belief_state, num_prices):
     file_strategies = {}
-    for p in frange(0, 1, .2):
-        file_base = solve_pomdp(p, num_prices)
+    for p in frange(0.00, 1.00, step):
+        file_base = filebase(p)
         start = get_max_starting_strategy(file_base, initial_belief_state)
         file_strategies[p] = get_list_of_actions(file_base, start)
     return file_strategies
 
 def frange(x, y, jump):
   r = []
-  while x < y:
+  while x <= y:
     r.append(x)
     x += jump
+    x = round(x, 2)
   return r
 
+def filebase(leave_probability):
+    return 'p-{0}'.format(leave_probability)
+
+# Usage: python GraphConsumer [-solve]
+# -solve means it will also create and solve the pomdp in addition to graphing
 def main():
+    # Handle arguments
+    solve = False
+    if (len(sys.argv) == 2) and (sys.argv[1] == '-solve'):
+        solve = True
+
+    # Set parameters
     num_prices = 7
-    uniform_belief_state = [1.0/num_prices] * num_prices
-    uniform_belief_state.append(0)
-    file_strategies = parse_files(uniform_belief_state, num_prices)
+    step = 0.05
+    belief_dist = 'uniform'
+    epsilon = 0.000001
+
+    # Create the initial belief state based on
+    if belief_dist == 'uniform':
+        belief_state = [1.0/num_prices] * num_prices
+        belief_state.append(0)
+    else:
+        belief_state = [1.0/num_prices] * num_prices
+        belief_state.append(0)
+
+    # Create and Solve the POMDP if requested
+    if solve:
+        for p in frange(0.00, 1.00, step):
+            solve_pomdp(p, num_prices, epsilon)
+
+    # Parse, print, and graph the strategies
+    file_strategies = parse_files(step, belief_state, num_prices)
     print file_strategies
     graph_strategies = transform_list(file_strategies)
     print graph_strategies

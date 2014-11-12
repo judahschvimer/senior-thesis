@@ -1,0 +1,124 @@
+discount: 0.95
+values: reward
+states: wtp-0 wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 wtp-6 done
+actions: p-0 p-1 p-2 p-3 p-4 p-5 p-6
+observations: o-1 o-2
+
+start include: wtp-0 wtp-1 wtp-2 wtp-3 wtp-4 wtp-5 wtp-6
+
+T : * : done : done 1.0
+
+T : p-0 : wtp-0 : done 1.0
+T : p-0 : wtp-1 : done 1.0
+T : p-0 : wtp-2 : done 1.0
+T : p-0 : wtp-3 : done 1.0
+T : p-0 : wtp-4 : done 1.0
+T : p-0 : wtp-5 : done 1.0
+T : p-0 : wtp-6 : done 1.0
+
+T : p-1 : wtp-0 : wtp-0 0.3
+T : p-1 : wtp-0 : done 0.7
+T : p-1 : wtp-1 : done 1.0
+T : p-1 : wtp-2 : done 1.0
+T : p-1 : wtp-3 : done 1.0
+T : p-1 : wtp-4 : done 1.0
+T : p-1 : wtp-5 : done 1.0
+T : p-1 : wtp-6 : done 1.0
+
+T : p-2 : wtp-0 : wtp-0 0.3
+T : p-2 : wtp-0 : done 0.7
+T : p-2 : wtp-1 : wtp-1 0.3
+T : p-2 : wtp-1 : done 0.7
+T : p-2 : wtp-2 : done 1.0
+T : p-2 : wtp-3 : done 1.0
+T : p-2 : wtp-4 : done 1.0
+T : p-2 : wtp-5 : done 1.0
+T : p-2 : wtp-6 : done 1.0
+
+T : p-3 : wtp-0 : wtp-0 0.3
+T : p-3 : wtp-0 : done 0.7
+T : p-3 : wtp-1 : wtp-1 0.3
+T : p-3 : wtp-1 : done 0.7
+T : p-3 : wtp-2 : wtp-2 0.3
+T : p-3 : wtp-2 : done 0.7
+T : p-3 : wtp-3 : done 1.0
+T : p-3 : wtp-4 : done 1.0
+T : p-3 : wtp-5 : done 1.0
+T : p-3 : wtp-6 : done 1.0
+
+T : p-4 : wtp-0 : wtp-0 0.3
+T : p-4 : wtp-0 : done 0.7
+T : p-4 : wtp-1 : wtp-1 0.3
+T : p-4 : wtp-1 : done 0.7
+T : p-4 : wtp-2 : wtp-2 0.3
+T : p-4 : wtp-2 : done 0.7
+T : p-4 : wtp-3 : wtp-3 0.3
+T : p-4 : wtp-3 : done 0.7
+T : p-4 : wtp-4 : done 1.0
+T : p-4 : wtp-5 : done 1.0
+T : p-4 : wtp-6 : done 1.0
+
+T : p-5 : wtp-0 : wtp-0 0.3
+T : p-5 : wtp-0 : done 0.7
+T : p-5 : wtp-1 : wtp-1 0.3
+T : p-5 : wtp-1 : done 0.7
+T : p-5 : wtp-2 : wtp-2 0.3
+T : p-5 : wtp-2 : done 0.7
+T : p-5 : wtp-3 : wtp-3 0.3
+T : p-5 : wtp-3 : done 0.7
+T : p-5 : wtp-4 : wtp-4 0.3
+T : p-5 : wtp-4 : done 0.7
+T : p-5 : wtp-5 : done 1.0
+T : p-5 : wtp-6 : done 1.0
+
+T : p-6 : wtp-0 : wtp-0 0.3
+T : p-6 : wtp-0 : done 0.7
+T : p-6 : wtp-1 : wtp-1 0.3
+T : p-6 : wtp-1 : done 0.7
+T : p-6 : wtp-2 : wtp-2 0.3
+T : p-6 : wtp-2 : done 0.7
+T : p-6 : wtp-3 : wtp-3 0.3
+T : p-6 : wtp-3 : done 0.7
+T : p-6 : wtp-4 : wtp-4 0.3
+T : p-6 : wtp-4 : done 0.7
+T : p-6 : wtp-5 : wtp-5 0.3
+T : p-6 : wtp-5 : done 0.7
+T : p-6 : wtp-6 : done 1.0
+
+O : * : * : o-1 1.0
+
+R : p-0 : wtp-0 : done : * 0.0
+R : p-0 : wtp-1 : done : * 0.0
+R : p-0 : wtp-2 : done : * 0.0
+R : p-0 : wtp-3 : done : * 0.0
+R : p-0 : wtp-4 : done : * 0.0
+R : p-0 : wtp-5 : done : * 0.0
+R : p-0 : wtp-6 : done : * 0.0
+
+R : p-1 : wtp-1 : done : * 1.0
+R : p-1 : wtp-2 : done : * 1.0
+R : p-1 : wtp-3 : done : * 1.0
+R : p-1 : wtp-4 : done : * 1.0
+R : p-1 : wtp-5 : done : * 1.0
+R : p-1 : wtp-6 : done : * 1.0
+
+R : p-2 : wtp-2 : done : * 2.0
+R : p-2 : wtp-3 : done : * 2.0
+R : p-2 : wtp-4 : done : * 2.0
+R : p-2 : wtp-5 : done : * 2.0
+R : p-2 : wtp-6 : done : * 2.0
+
+R : p-3 : wtp-3 : done : * 3.0
+R : p-3 : wtp-4 : done : * 3.0
+R : p-3 : wtp-5 : done : * 3.0
+R : p-3 : wtp-6 : done : * 3.0
+
+R : p-4 : wtp-4 : done : * 4.0
+R : p-4 : wtp-5 : done : * 4.0
+R : p-4 : wtp-6 : done : * 4.0
+
+R : p-5 : wtp-5 : done : * 5.0
+R : p-5 : wtp-6 : done : * 5.0
+
+R : p-6 : wtp-6 : done : * 6.0
+
