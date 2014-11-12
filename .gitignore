@@ -5,3 +5,5 @@ pomdp-solve-5.3/
 *.alpha
 *.pg
 *.jar
+*.POMDP
+*.png
