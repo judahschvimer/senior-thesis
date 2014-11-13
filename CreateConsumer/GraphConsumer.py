@@ -9,9 +9,9 @@ import itertools
 
 import CreateConsumer
 
-def get_max_starting_strategy(file_base, initial_belief_state):
-    for file_name in glob.glob('*.alpha'):
-        if file_name.startswith(file_base):
+def get_max_starting_strategy(dirname, file_base, initial_belief_state):
+    for file_name in glob.glob(os.path.join(dirname, '*.alpha')):
+        if file_name.startswith(os.path.join(dirname, file_base)):
             with open(file_name, 'r') as f:
                 lines = f.readlines()
                 max_sum = -99999
@@ -27,9 +27,9 @@ def get_max_starting_strategy(file_base, initial_belief_state):
                             max_strategy = (idx-1)/3
             return max_strategy
 
-def get_list_of_actions(file_base, start):
-    for file_name in glob.glob('*.pg'):
-        if file_name.startswith(file_base):
+def get_list_of_actions(dirname, file_base, start):
+    for file_name in glob.glob(os.path.join(dirname, '*.pg')):
+        if file_name.startswith(os.path.join(dirname, file_base)):
             with open(file_name, 'r') as f:
                 lines = f.readlines()
                 lines = map(lambda(x): x.strip(), lines)
@@ -38,19 +38,22 @@ def get_list_of_actions(file_base, start):
                 actions = []
                 bargaining = True
                 while bargaining:
+                    print curr
+                    print file_name
                     actions.append(int(lines[curr][1]))
                     curr = int(lines[curr][2])
                     if curr == 0:
                         bargaining = False
                 return actions
 
-def solve_pomdp(leave_probability, num_prices, epsilon):
+def solve_pomdp(dirname, leave_probability, num_prices, epsilon):
     discount = 0.95
     values = 'reward'
     file_base = filebase(leave_probability)
+    file_name = os.path.join(dirname, file_base + '.POMDP')
 
-    CreateConsumer.write_pomdp(file_base + '.POMDP', discount, num_prices, values, leave_probability)
-    subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_base + '.POMDP', '-epsilon', str(epsilon)])
+    CreateConsumer.write_pomdp(file_name, discount, num_prices, values, leave_probability)
+    subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon)])
     return file_base
 
 
@@ -66,12 +69,12 @@ def transform_list(strategy_list):
                 index_lists[idx] = sorted(index_list, key = lambda x: x[0])
     return index_lists
 
-def parse_files(step, initial_belief_state, num_prices):
+def parse_files(dirname, step, initial_belief_state, num_prices):
     file_strategies = {}
     for p in frange(0.00, 1.00, step):
         file_base = filebase(p)
-        start = get_max_starting_strategy(file_base, initial_belief_state)
-        file_strategies[p] = get_list_of_actions(file_base, start)
+        start = get_max_starting_strategy(dirname, file_base, initial_belief_state)
+        file_strategies[p] = get_list_of_actions(dirname, file_base, start)
     return file_strategies
 
 def frange(x, y, jump):
@@ -90,14 +93,18 @@ def filebase(leave_probability):
 def main():
     # Handle arguments
     solve = False
-    if (len(sys.argv) == 2) and (sys.argv[1] == '-solve'):
+    if sys.argv[1] == '-solve':
+        dirname = str(os.getpid())
+        os.mkdir(dirname)
         solve = True
+    else:
+        dirname = sys.argv[1]
 
     # Set parameters
     num_prices = 7
     step = 0.05
     belief_dist = 'uniform'
-    epsilon = 0.000001
+    epsilon = 0.00001
 
     # Create the initial belief state based on
     if belief_dist == 'uniform':
@@ -107,22 +114,28 @@ def main():
         belief_state = [1.0/num_prices] * num_prices
         belief_state.append(0)
 
+
     # Create and Solve the POMDP if requested
     if solve:
         for p in frange(0.00, 1.00, step):
-            solve_pomdp(p, num_prices, epsilon)
+            solve_pomdp(dirname, p, num_prices, epsilon)
 
     # Parse, print, and graph the strategies
-    file_strategies = parse_files(step, belief_state, num_prices)
+    file_strategies = parse_files(dirname, step, belief_state, num_prices)
     print file_strategies
     graph_strategies = transform_list(file_strategies)
     print graph_strategies
     marker = itertools.cycle((',', '+', '.', 'o', '*'))
+    fig = plt.figure()
     for i in range(0, len(graph_strategies)):
         data = zip(*(graph_strategies[i]))
+        ax = fig.add_subplot(111)
         plt.scatter(*data, marker = marker.next())
-        plt.plot(*data)
-    plt.show()
+        ax.plot(*data)
+        ax.set_title('Optimal Merchant Strategy')
+        ax.set_xlabel('Leaving Probability')
+        ax.set_ylabel('Price')
+    plt.savefig(os.path.join(dirname, 'graph.png'), format = 'png')
 
 
 if __name__ == '__main__':

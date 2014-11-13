@@ -19,8 +19,13 @@ if __name__ == '__main__':
     out = transform_list(d)
     print out
     marker = itertools.cycle((',', '+', '.', 'o', '*'))
+    fig = plt.figure()
     for i in range(0,6):
         data = zip(*(out[i]))
-        plt.scatter(*data, marker = marker.next())
-        plt.plot(*data)
-    plt.show()
+        ax = fig.add_subplot(111)
+        ax.scatter(*data, marker = marker.next())
+        ax.plot(*data)
+        ax.set_title('axes title')
+        ax.set_xlabel('xlabel')
+        ax.set_ylabel('ylabel')
+    plt.savefig('test.png', format = 'png')
