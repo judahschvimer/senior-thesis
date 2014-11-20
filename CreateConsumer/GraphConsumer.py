@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import subprocess
 from decimal import Decimal
 import itertools
+import pprint
 
 import CreateConsumer
 
@@ -29,7 +30,35 @@ def get_max_starting_strategy(dirname, file_base, initial_belief_state):
                             max_strategy = (idx-1)/3
             return max_strategy
 
-def get_list_of_actions(dirname, file_base, start):
+def get_pg_files_in_order(dirname, file_base):
+    files = []
+    for file_name in glob.glob(os.path.join(dirname, '*.pg*')):
+        if file_name.startswith(os.path.join(dirname, file_base + '-')):
+            if file_name[-1] == 'g':
+                continue
+            files.append(file_name)
+    return sorted(files, key = lambda x: int(x.split(".pg")[1]), reverse=True)
+
+
+def get_list_of_actions_for_multiple_pgs(dirname, file_base, start):
+    files = get_pg_files_in_order(dirname, file_base)
+    curr = start
+    actions = []
+    bargaining = True
+    for file_name in files:
+        if bargaining == False:
+            break
+        with open(file_name, 'r') as f:
+            lines = f.readlines()
+            lines = map(lambda(x): x.strip(), lines)
+            lines = map(lambda(x): x.split(), lines)
+            actions.append(int(lines[curr][1]))
+            curr = int(lines[curr][2])
+            if curr == 0:
+                bargaining = False
+    return actions
+
+def get_list_of_actions_for_single_pg(dirname, file_base, start):
     for file_name in glob.glob(os.path.join(dirname, '*.pg')):
         if file_name.startswith(os.path.join(dirname, file_base)):
             with open(file_name, 'r') as f:
@@ -46,14 +75,18 @@ def get_list_of_actions(dirname, file_base, start):
                         bargaining = False
                 return actions
 
-def solve_pomdp(dirname, leave_probability, num_prices, epsilon, horizon):
+def solve_pomdp(dirname, leave_probability, num_prices, epsilon, horizon, save_all):
     discount = 0.95
     values = 'reward'
     file_base = filebase(leave_probability)
     file_name = os.path.join(dirname, file_base + '.POMDP')
 
     CreateConsumer.write_pomdp(file_name, discount, num_prices, values, leave_probability)
-    subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon), '-horizon', str(horizon), '-save_all'])
+    if save_all:
+        subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon), '-horizon', str(horizon), '-save_all'])
+    else:
+        subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon), '-horizon', str(horizon)])
+
     return file_base
 
 
@@ -69,14 +102,17 @@ def transform_list(strategy_list):
                 index_lists[idx] = sorted(index_list, key = lambda x: x[0])
     return index_lists
 
-def parse_files(dirname, step, initial_belief_state, num_prices):
+def parse_files(dirname, step, initial_belief_state, num_prices, save_all):
     file_strategies = {}
     for p in frange(0.00, 1.00, step):
         file_base = filebase(p)
         print "parsing {0}".format(file_base)
         start = get_max_starting_strategy(dirname, file_base, initial_belief_state)
         print "best starting strategy is {0}".format(start)
-        file_strategies[p] = get_list_of_actions(dirname, file_base, start)
+        if save_all:
+            file_strategies[p] = get_list_of_actions_for_multiple_pgs(dirname, file_base, start)
+        else:
+            file_strategies[p] = get_list_of_actions_for_single_pg(dirname, file_base, start)
     return file_strategies
 
 def frange(x, y, jump):
@@ -108,6 +144,7 @@ def main():
     belief_dist = 'uniform'
     epsilon = 1
     horizon = 20
+    save_all = True
 
     # Create the initial belief state based on
     if belief_dist == 'uniform':
@@ -122,13 +159,16 @@ def main():
     if solve:
         for p in frange(0.00, 1.00, step):
             print p
-            solve_pomdp(dirname, p, num_prices, epsilon, horizon)
+            solve_pomdp(dirname, p, num_prices, epsilon, horizon, save_all)
 
     # Parse, print, and graph the strategies
-    file_strategies = parse_files(dirname, step, belief_state, num_prices)
-    print file_strategies
+    pp = pprint.PrettyPrinter(indent=4)
+    file_strategies = parse_files(dirname, step, belief_state, num_prices, save_all)
+    print "pre-transform strategies:"
+    pp.pprint(file_strategies)
     graph_strategies = transform_list(file_strategies)
-    print graph_strategies
+    print "post-transform strategies:"
+    #pp.pprint(graph_strategies)
     marker = itertools.cycle((',', '+', '.', 'o', '*'))
     fig = plt.figure()
     for i in range(0, len(graph_strategies)):
