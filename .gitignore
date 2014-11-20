@@ -2,8 +2,9 @@ burlap/
 pomdp-solve-5.3/
 *.episode
 *.class
-*.alpha
-*.pg
+*.alpha*
+*.pg*
 *.jar
 *.POMDP
 *.png
+*.txt

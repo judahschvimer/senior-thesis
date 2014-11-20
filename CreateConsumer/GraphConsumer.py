@@ -2,6 +2,8 @@ import sys
 import glob
 import os
 import numpy
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import subprocess
 from decimal import Decimal
@@ -38,22 +40,20 @@ def get_list_of_actions(dirname, file_base, start):
                 actions = []
                 bargaining = True
                 while bargaining:
-                    print curr
-                    print file_name
                     actions.append(int(lines[curr][1]))
                     curr = int(lines[curr][2])
                     if curr == 0:
                         bargaining = False
                 return actions
 
-def solve_pomdp(dirname, leave_probability, num_prices, epsilon):
+def solve_pomdp(dirname, leave_probability, num_prices, epsilon, horizon):
     discount = 0.95
     values = 'reward'
     file_base = filebase(leave_probability)
     file_name = os.path.join(dirname, file_base + '.POMDP')
 
     CreateConsumer.write_pomdp(file_name, discount, num_prices, values, leave_probability)
-    subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon)])
+    subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon), '-horizon', str(horizon), '-save_all'])
     return file_base
 
 
@@ -73,7 +73,9 @@ def parse_files(dirname, step, initial_belief_state, num_prices):
     file_strategies = {}
     for p in frange(0.00, 1.00, step):
         file_base = filebase(p)
+        print "parsing {0}".format(file_base)
         start = get_max_starting_strategy(dirname, file_base, initial_belief_state)
+        print "best starting strategy is {0}".format(start)
         file_strategies[p] = get_list_of_actions(dirname, file_base, start)
     return file_strategies
 
@@ -104,7 +106,8 @@ def main():
     num_prices = 7
     step = 0.05
     belief_dist = 'uniform'
-    epsilon = 0.00001
+    epsilon = 1
+    horizon = 20
 
     # Create the initial belief state based on
     if belief_dist == 'uniform':
@@ -118,7 +121,8 @@ def main():
     # Create and Solve the POMDP if requested
     if solve:
         for p in frange(0.00, 1.00, step):
-            solve_pomdp(dirname, p, num_prices, epsilon)
+            print p
+            solve_pomdp(dirname, p, num_prices, epsilon, horizon)
 
     # Parse, print, and graph the strategies
     file_strategies = parse_files(dirname, step, belief_state, num_prices)
@@ -135,7 +139,7 @@ def main():
         ax.set_title('Optimal Merchant Strategy')
         ax.set_xlabel('Leaving Probability')
         ax.set_ylabel('Price')
-    plt.savefig(os.path.join(dirname, 'graph.png'), format = 'png')
+    plt.savefig(os.path.join(dirname, dirname + '.png'), format = 'png')
 
 
 if __name__ == '__main__':
