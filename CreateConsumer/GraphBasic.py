@@ -10,11 +10,11 @@ from decimal import Decimal
 import itertools
 import pprint
 
-import CreateConsumer
+import CreateBasic
 
 def get_max_starting_strategy(dirname, file_base, initial_belief_state):
     for file_name in glob.glob(os.path.join(dirname, '*.alpha')):
-        if file_name.startswith(os.path.join(dirname, file_base)):
+        if file_name.startswith(os.path.join(dirname, file_base + '-')):
             with open(file_name, 'r') as f:
                 lines = f.readlines()
                 max_sum = -99999
@@ -60,7 +60,7 @@ def get_list_of_actions_for_multiple_pgs(dirname, file_base, start):
 
 def get_list_of_actions_for_single_pg(dirname, file_base, start):
     for file_name in glob.glob(os.path.join(dirname, '*.pg')):
-        if file_name.startswith(os.path.join(dirname, file_base)):
+        if file_name.startswith(os.path.join(dirname, file_base + '-')):
             with open(file_name, 'r') as f:
                 lines = f.readlines()
                 lines = map(lambda(x): x.strip(), lines)
@@ -81,7 +81,7 @@ def solve_pomdp(dirname, leave_probability, num_prices, epsilon, horizon, save_a
     file_base = filebase(leave_probability)
     file_name = os.path.join(dirname, file_base + '.POMDP')
 
-    CreateConsumer.write_pomdp(file_name, discount, num_prices, values, leave_probability)
+    CreateBasic.write_pomdp(file_name, discount, num_prices, values, leave_probability)
     if save_all:
         subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon), '-horizon', str(horizon), '-save_all'])
     else:
@@ -139,11 +139,11 @@ def main():
         dirname = sys.argv[1]
 
     # Set parameters
-    num_prices = 7
+    num_prices = 20
     step = 0.05
     belief_dist = 'uniform'
-    epsilon = 1
-    horizon = 20
+    epsilon = .0001
+    horizon = 25
     save_all = True
 
     # Create the initial belief state based on
@@ -176,9 +176,10 @@ def main():
         ax = fig.add_subplot(111)
         plt.scatter(*data, marker = marker.next())
         ax.plot(*data)
-        ax.set_title('Optimal Merchant Strategy')
+        ax.set_title('BASIC: NumPrices: {0} Step: {1}'.format(num_prices, step))
         ax.set_xlabel('Leaving Probability')
         ax.set_ylabel('Price')
+        ax.set_ylim([0, num_prices + 1])
     plt.savefig(os.path.join(dirname, dirname + '.png'), format = 'png')
 
 
