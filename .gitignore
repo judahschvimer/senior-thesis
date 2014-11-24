@@ -8,3 +8,4 @@ pomdp-solve-5.3/
 *.POMDP
 *.png
 *.txt
+*.pyc

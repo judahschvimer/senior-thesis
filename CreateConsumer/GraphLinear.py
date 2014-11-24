@@ -75,13 +75,13 @@ def get_list_of_actions_for_single_pg(dirname, file_base, start):
                         bargaining = False
                 return actions
 
-def solve_pomdp(dirname, leave_slope, num_prices, epsilon, horizon, save_all):
+def solve_pomdp(dirname, leave_slope, leave_intercept, num_prices, epsilon, horizon, save_all):
     discount = 0.95
     values = 'reward'
     file_base = filebase(leave_slope)
     file_name = os.path.join(dirname, file_base + '.POMDP')
 
-    CreateLinear.write_pomdp(file_name, discount, num_prices, values, leave_slope)
+    CreateLinear.write_pomdp(file_name, discount, num_prices, values, leave_slope, leave_intercept)
     if save_all:
         subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon), '-horizon', str(horizon), '-save_all'])
     else:
@@ -141,7 +141,8 @@ def main():
     # Set parameters
     num_prices = 7
     num_steps = 20
-    top_slope = 1.0 / num_prices
+    leave_intercept = 0.2
+    top_slope = (1.0-leave_intercept) / num_prices
     step = (top_slope / num_steps)
     belief_dist = 'uniform'
     epsilon = .0001
@@ -161,7 +162,7 @@ def main():
     if solve:
         for p in frange(0.0, top_slope, step):
             print p
-            solve_pomdp(dirname, p, num_prices, epsilon, horizon, save_all)
+            solve_pomdp(dirname, p, leave_intercept, num_prices, epsilon, horizon, save_all)
 
     # Parse, print, and graph the strategies
     pp = pprint.PrettyPrinter(indent=4)
