@@ -141,13 +141,13 @@ def main():
     # Set parameters
     num_prices = 7
     num_steps = 20
-    leave_intercept = 0.2
+    leave_intercept = 0.8
     top_slope = (1.0-leave_intercept) / num_prices
     step = (top_slope / num_steps)
     belief_dist = 'uniform'
     epsilon = .0001
     horizon = 25
-    save_all = True
+    save_all = False
 
     # Create the initial belief state based on
     if belief_dist == 'uniform':
@@ -179,7 +179,7 @@ def main():
         ax = fig.add_subplot(111)
         plt.scatter(*data, marker = marker.next())
         ax.plot(*data)
-        ax.set_title('LINEAR: NumPrices: {0} Slope Step: {1}'.format(num_prices, step))
+        ax.set_title('LINEAR: NumPrices: {0} Intercept: {1} Slope Step: {2}'.format(num_prices, leave_intercept, step))
         ax.set_xlabel('Leaving Slope')
         ax.set_ylabel('Price')
         ax.set_ylim([0, num_prices + 1])
