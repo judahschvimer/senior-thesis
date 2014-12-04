@@ -102,6 +102,12 @@ def transform_list(strategy_list):
                 index_lists[idx] = sorted(index_list, key = lambda x: x[0])
     return index_lists
 
+def straighten_list(strategy_list):
+    max_length = len(max(strategy_list.values(),key=len))
+    for strategy in strategy_list.values():
+        l = len(strategy)
+        strategy.extend([strategy[l-1]] * (max_length-l))
+
 def parse_files(dirname, top_slope, step, initial_belief_state, num_prices, save_all):
     file_strategies = {}
     for p in frange(0.00, top_slope, step):
@@ -141,7 +147,7 @@ def main():
     # Set parameters
     num_prices = 7
     num_steps = 20
-    leave_intercept = 0.8
+    leave_intercept = 0.4
     top_slope = (1.0-leave_intercept) / num_prices
     step = (top_slope / num_steps)
     belief_dist = 'uniform'
@@ -167,6 +173,7 @@ def main():
     # Parse, print, and graph the strategies
     pp = pprint.PrettyPrinter(indent=4)
     file_strategies = parse_files(dirname, top_slope, step, belief_state, num_prices, save_all)
+    straighten_list(file_strategies)
     print "pre-transform strategies:"
     pp.pprint(file_strategies)
     graph_strategies = transform_list(file_strategies)

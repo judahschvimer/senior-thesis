@@ -148,12 +148,12 @@ def main():
 
     # Set parameters
     num_prices = 7
-    leave_probability = 0.1
+    leave_probability = 0.9
     move_probability_step = 0.05
     belief_dist = 'uniform'
     epsilon = 0.0000000000000000000000001
     horizon = 25000
-    save_all = False
+    save_all = True
 
     # Create the initial belief state based on
     if belief_dist == 'uniform':

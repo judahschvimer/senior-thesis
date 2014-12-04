@@ -15,6 +15,7 @@ import CreateMovingWTP
 def get_max_starting_strategy(dirname, file_base, initial_belief_state):
     for file_name in glob.glob(os.path.join(dirname, '*.alpha')):
         if file_name.startswith(os.path.join(dirname, file_base + '-')):
+            print file_name
             with open(file_name, 'r') as f:
                 lines = f.readlines()
                 max_sum = -99999
@@ -148,7 +149,7 @@ def main():
 
     # Set parameters
     num_prices = 7
-    leave_probability = 0.1
+    leave_probability = 0.0
     move_probability_step = 0.05
     belief_dist = 'uniform'
     epsilon = 0.0000000000000000000000001

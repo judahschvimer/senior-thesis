@@ -10,7 +10,7 @@ from decimal import Decimal
 import itertools
 import pprint
 
-import CreateMovingWTP
+import CreateDouble
 
 def get_max_starting_strategy(dirname, file_base, initial_belief_state):
     for file_name in glob.glob(os.path.join(dirname, '*.alpha')):
@@ -53,9 +53,8 @@ def get_list_of_actions_for_multiple_pgs(dirname, file_base, start):
             lines = map(lambda(x): x.strip(), lines)
             lines = map(lambda(x): x.split(), lines)
             actions.append(int(lines[curr][1]))
-            oldcurr = curr
             curr = int(lines[curr][2])
-            if curr == 0 or oldcurr == curr:
+            if curr == 0:
                 bargaining = False
     return actions
 
@@ -71,19 +70,18 @@ def get_list_of_actions_for_single_pg(dirname, file_base, start):
                 bargaining = True
                 while bargaining:
                     actions.append(int(lines[curr][1]))
-                    oldcurr = curr
                     curr = int(lines[curr][2])
-                    if curr == 0 or curr == oldcurr:
+                    if curr == 0:
                         bargaining = False
                 return actions
 
-def solve_pomdp(dirname, leave_probability, move_wtp_probability, num_prices, epsilon, horizon, save_all):
+def solve_pomdp(dirname, num_prices, num_leave_probs, epsilon, horizon, save_all):
     discount = 0.95
     values = 'reward'
-    file_base = filebase(leave_probability, move_wtp_probability)
+    file_base = filebase(num_prices, num_leave_probs)
     file_name = os.path.join(dirname, file_base + '.POMDP')
 
-    CreateMovingWTP.write_pomdp(file_name, discount, num_prices, values, leave_probability, move_wtp_probability)
+    CreateDouble.write_pomdp(file_name, discount, num_prices, values, num_leave_probs)
     if save_all:
         subprocess.call(['../pomdp-solve-5.3/src/pomdp-solve', '-pomdp', file_name, '-epsilon', str(epsilon), '-horizon', str(horizon), '-save_all'])
     else:
@@ -110,17 +108,18 @@ def straighten_list(strategy_list):
         l = len(strategy)
         strategy.extend([strategy[l-1]] * (max_length-l))
 
-def parse_files(dirname, leave_probability, move_probability_step, initial_belief_state, num_prices, save_all):
+def parse_files(dirname, initial_belief_states, num_prices, num_leave_probs, save_all):
     file_strategies = {}
-    for p in frange(0.00, 1.00, move_probability_step):
-        file_base = filebase(leave_probability, p)
-        print "parsing {0}".format(file_base)
+    file_base = filebase(num_prices, num_leave_probs)
+    print "parsing {0}".format(file_base)
+    # print initial_belief_states
+    for label, initial_belief_state in initial_belief_states.items():
         start = get_max_starting_strategy(dirname, file_base, initial_belief_state)
         print "best starting strategy is {0}".format(start)
         if save_all:
-            file_strategies[p] = get_list_of_actions_for_multiple_pgs(dirname, file_base, start)
+            file_strategies[label] = get_list_of_actions_for_multiple_pgs(dirname, file_base, start)
         else:
-            file_strategies[p] = get_list_of_actions_for_single_pg(dirname, file_base, start)
+            file_strategies[label] = get_list_of_actions_for_single_pg(dirname, file_base, start)
     return file_strategies
 
 def frange(x, y, jump):
@@ -128,11 +127,33 @@ def frange(x, y, jump):
   while x <= y:
     r.append(x)
     x += jump
-    x = round(x, 2)
+    x = round(x, 4)
   return r
 
-def filebase(leave_probability, move_wtp_probability):
-    return 'p-{0}-{1}'.format(leave_probability, move_wtp_probability)
+def filebase(num_prices, num_leave_probs):
+    return 'p-{0}-l-{1}'.format(num_prices, num_leave_probs)
+
+def get_states(num_prices, num_leave_probs):
+    prices = range(0, num_prices)
+    leaves = frange(0.0, 1.0, 1.0/num_leave_probs)
+    return itertools.product(prices, leaves)
+
+def create_uniform_belief_dist(num_prices, num_leave_probs):
+    belief_states = {}
+    for p in frange(0.0, 1.0, 1.0/num_leave_probs):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            if s[1] == p:
+                bs.append(1.0 / num_prices)
+            else:
+                bs.append(0)
+        bs.append(0)
+        belief_states[p] = bs
+    return belief_states
+
+def create_increasing_belief_dist(num_prices, num_leave_probs):
+    return 0
 
 # Usage: python GraphConsumer [-solve]
 # -solve means it will also create and solve the pomdp in addition to graphing
@@ -147,30 +168,27 @@ def main():
         dirname = sys.argv[1]
 
     # Set parameters
-    num_prices = 7
-    leave_probability = 0.1
-    move_probability_step = 0.05
+    num_prices = 8
+    num_leave_probs = 20
     belief_dist = 'uniform'
-    epsilon = 0.0000000000000000000000001
-    horizon = 25000
+    epsilon = .000000001
+    horizon = 100
     save_all = False
 
     # Create the initial belief state based on
     if belief_dist == 'uniform':
-        belief_state = [1.0/num_prices] * num_prices
-        belief_state.append(0)
+        belief_states = create_uniform_belief_dist(num_prices, num_leave_probs)
     else:
-        belief_state = [1.0/num_prices] * num_prices
-        belief_state.append(0)
+        belief_states = create_uniform_belief_dist(num_prices, num_leave_probs)
+
 
     # Create and Solve the POMDP if requested
     if solve:
-        for mp in frange(0.00, 1.00, move_probability_step):
-            solve_pomdp(dirname, leave_probability, mp, num_prices, epsilon, horizon, save_all)
+        solve_pomdp(dirname, num_prices, num_leave_probs, epsilon, horizon, save_all)
 
     # Parse, print, and graph the strategies
     pp = pprint.PrettyPrinter(indent=4)
-    file_strategies = parse_files(dirname, leave_probability, move_probability_step, belief_state, num_prices, save_all)
+    file_strategies = parse_files(dirname, belief_states, num_prices, num_leave_probs, save_all)
     straighten_list(file_strategies)
     print "pre-transform strategies:"
     pp.pprint(file_strategies)
@@ -184,8 +202,8 @@ def main():
         ax = fig.add_subplot(111)
         plt.scatter(*data, marker = marker.next())
         ax.plot(*data)
-        ax.set_title('MoveWTP: NumPrices: {0} Leave P: {1} Move Step: {2}'.format(num_prices, leave_probability, move_probability_step))
-        ax.set_xlabel('WTP Moving Probability')
+        ax.set_title('BASIC: NumPrices: {0} NumLeaveProbs: {1}'.format(num_prices, num_leave_probs))
+        ax.set_xlabel('Leaving Probability')
         ax.set_ylabel('Price')
         ax.set_ylim([0, num_prices + 1])
     plt.savefig(os.path.join(dirname, dirname + '.png'), format = 'png')
