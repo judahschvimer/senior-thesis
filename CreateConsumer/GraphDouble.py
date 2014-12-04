@@ -9,6 +9,9 @@ import subprocess
 from decimal import Decimal
 import itertools
 import pprint
+import scipy.misc
+import scipy.special
+import math
 
 import CreateDouble
 
@@ -135,12 +138,12 @@ def filebase(num_prices, num_leave_probs):
 
 def get_states(num_prices, num_leave_probs):
     prices = range(0, num_prices)
-    leaves = frange(0.0, 1.0, 1.0/num_leave_probs)
+    leaves = frange(0.0, 1.0, 1.0/(num_leave_probs-1))
     return itertools.product(prices, leaves)
 
-def create_uniform_belief_dist(num_prices, num_leave_probs):
+def create_price_uniform_belief_dist(num_prices, num_leave_probs):
     belief_states = {}
-    for p in frange(0.0, 1.0, 1.0/num_leave_probs):
+    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -152,8 +155,84 @@ def create_uniform_belief_dist(num_prices, num_leave_probs):
         belief_states[p] = bs
     return belief_states
 
-def create_increasing_belief_dist(num_prices, num_leave_probs):
-    return 0
+def create_price_increasing_belief_dist(num_prices, num_leave_probs):
+    belief_states = {}
+    total_increments = (num_prices + 1) * (num_prices + 2) / 2
+    increment_size = 1.0 / total_increments
+    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            if s[1] == p:
+                bs.append(increment_size * (s[0] + 1))
+            else:
+                bs.append(0)
+        bs.append(0)
+        belief_states[p] = bs
+    return belief_states
+
+def create_price_decreasing_belief_dist(num_prices, num_leave_probs):
+    belief_states = {}
+    total_increments = (num_prices + 1) * (num_prices + 2) / 2
+    increment_size = 1.0 / total_increments
+    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            if s[1] == p:
+                bs.append(increment_size * (num_prices - s[0]))
+            else:
+                bs.append(0)
+        bs.append(0)
+        belief_states[p] = bs
+    return belief_states
+
+def create_price_binomial_belief_dist(num_prices, num_leave_probs, probability):
+    belief_states = {}
+    n = num_prices - 1
+    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            if s[1] == p:
+                k = s[0]
+                bs.append(scipy.misc.comb(n, k)*math.pow(probability, k)*(math.pow((1-probability),(n-k))))
+            else:
+                bs.append(0)
+        bs.append(0)
+        belief_states[p] = bs
+    return belief_states
+
+def create_price_poisson_belief_dist(num_prices, num_leave_probs, lam):
+    belief_states = {}
+    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            if s[1] == p:
+                k = s[0]
+                bs.append(math.pow(lam, k) * math.exp(-1 * lam) / math.factorial(k))
+            else:
+                bs.append(0)
+        bs.append(0)
+        belief_states[p] = bs
+    return belief_states
+
+def create_price_beta_binomial_belief_dist(num_prices, num_leave_probs, a, b):
+    belief_states = {}
+    n = num_prices - 1
+    for p in frange(0.0, 1.0, 1.0 / (num_leave_probs - 1)):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            if s[1] == p:
+                k = s[0]
+                bs.append(scipy.misc.comb(num_prices - 1, s[0]) * scipy.special.beta(k + a, n - k + b) / scipy.special.beta(a, b))
+            else:
+                bs.append(0)
+        bs.append(0)
+        belief_states[p] = bs
+    return belief_states
 
 # Usage: python GraphConsumer [-solve]
 # -solve means it will also create and solve the pomdp in addition to graphing
@@ -169,17 +248,27 @@ def main():
 
     # Set parameters
     num_prices = 8
-    num_leave_probs = 20
-    belief_dist = 'uniform'
+    num_leave_probs = 21
+    belief_dist = 'price_bimodal'
     epsilon = .000000001
-    horizon = 100
+    horizon = 1000
     save_all = False
 
     # Create the initial belief state based on
-    if belief_dist == 'uniform':
-        belief_states = create_uniform_belief_dist(num_prices, num_leave_probs)
+    if belief_dist == 'price_uniform':
+        belief_states = create_price_uniform_belief_dist(num_prices, num_leave_probs)
+    elif belief_dist == 'price_increasing':
+        belief_states = create_price_increasing_belief_dist(num_prices, num_leave_probs)
+    elif belief_dist == 'price_decreasing':
+        belief_states = create_price_decreasing_belief_dist(num_prices, num_leave_probs)
+    elif belief_dist == 'price_binomial':
+        belief_states = create_price_binomial_belief_dist(num_prices, num_leave_probs, 0.5)
+    elif belief_dist == 'price_poisson':
+        belief_states = create_price_poisson_belief_dist(num_prices, num_leave_probs, 1)
+    elif belief_dist == 'price_bimodal':
+        belief_states = create_price_beta_binomial_belief_dist(num_prices, num_leave_probs, 0.3, 0.3)
     else:
-        belief_states = create_uniform_belief_dist(num_prices, num_leave_probs)
+        belief_states = create_price_uniform_belief_dist(num_prices, num_leave_probs)
 
 
     # Create and Solve the POMDP if requested
@@ -188,6 +277,8 @@ def main():
 
     # Parse, print, and graph the strategies
     pp = pprint.PrettyPrinter(indent=4)
+    print "belief states:"
+    print(belief_states)
     file_strategies = parse_files(dirname, belief_states, num_prices, num_leave_probs, save_all)
     straighten_list(file_strategies)
     print "pre-transform strategies:"
@@ -202,11 +293,11 @@ def main():
         ax = fig.add_subplot(111)
         plt.scatter(*data, marker = marker.next())
         ax.plot(*data)
-        ax.set_title('BASIC: NumPrices: {0} NumLeaveProbs: {1}'.format(num_prices, num_leave_probs))
+        ax.set_title('DOUBLE: Dist: {0} NumPrices: {1} NumLeaves: {2}'.format(belief_dist, num_prices, num_leave_probs))
         ax.set_xlabel('Leaving Probability')
         ax.set_ylabel('Price')
         ax.set_ylim([0, num_prices + 1])
-    plt.savefig(os.path.join(dirname, dirname + '.png'), format = 'png')
+    plt.savefig(os.path.join(dirname, belief_dist + '.png'), format = 'png')
 
 
 if __name__ == '__main__':

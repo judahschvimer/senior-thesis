@@ -75,7 +75,7 @@ def frange(x, y, jump):
 def write_pomdp(out_file_name, discount, num_prices, values, num_leave_probs):
     wtps = range(0, num_prices)
     prices = range(0, num_prices)
-    leaves = frange(0.0, 1.0, 1.0/num_leave_probs)
+    leaves = frange(0.0, 1.0, 1.0/(num_leave_probs-1))
     with open(out_file_name, 'w') as f:
         write_header(f, discount, values, prices, wtps, leaves)
         write_transitions(f, prices, wtps, leaves)
