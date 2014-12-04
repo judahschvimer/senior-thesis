@@ -155,6 +155,20 @@ def create_price_uniform_belief_dist(num_prices, num_leave_probs):
         belief_states[p] = bs
     return belief_states
 
+def create_leave_uniform_belief_dist(num_prices, num_leave_probs):
+    belief_states = {}
+    for wtp in range(0, num_prices):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            if s[0] == wtp:
+                bs.append(1.0 / num_leave_probs)
+            else:
+                bs.append(0)
+        bs.append(0)
+        belief_states[wtp] = bs
+    return belief_states
+
 def create_price_increasing_belief_dist(num_prices, num_leave_probs):
     belief_states = {}
     total_increments = (num_prices + 1) * (num_prices + 2) / 2
@@ -227,12 +241,60 @@ def create_price_beta_binomial_belief_dist(num_prices, num_leave_probs, a, b):
         for s in states:
             if s[1] == p:
                 k = s[0]
-                bs.append(scipy.misc.comb(num_prices - 1, s[0]) * scipy.special.beta(k + a, n - k + b) / scipy.special.beta(a, b))
+                bs.append(scipy.misc.comb(n, k) * scipy.special.beta(k + a, n - k + b) / scipy.special.beta(a, b))
             else:
                 bs.append(0)
         bs.append(0)
         belief_states[p] = bs
     return belief_states
+
+def create_price_uniform_leave_increasing_belief_dist(num_prices, num_leave_probs):
+    belief_states = {}
+    n = num_leave_probs
+    for base in range(0, 11):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            # use s[0] to determine the slope
+            k = s[1] * num_leave_probs
+            # If the WTP is in the bottom half skew it left, otherwise skew it right
+            if s[0] < num_prices / 2:
+                a = base + 2 * abs((num_prices / 2) - s[0])
+                b = base
+            else:
+                b = base + 2 * abs((num_prices / 2) - s[0])
+                a = base
+            bs.append((scipy.misc.comb(n, k) * scipy.special.beta(k + a, n - k + b) / scipy.special.beta(a, b)) / num_prices)
+        bs.append(0)
+        belief_states[base] = bs
+    #for l, s in belief_states.items():
+        #print sum(s)
+    return belief_states
+
+def create_price_uniform_leave_decreasing_belief_dist(num_prices, num_leave_probs):
+    belief_states = {}
+    n = num_leave_probs
+    for base in range(0, 11):
+        bs = []
+        states = get_states(num_prices, num_leave_probs)
+        for s in states:
+            # use s[0] to determine the slope
+            k = s[1] * num_leave_probs
+            # If the WTP is in the bottom half skew it left, otherwise skew it right
+            if s[0] < num_prices / 2:
+                b = base + 2 * abs((num_prices / 2) - s[0])
+                a = base
+            else:
+                a = base + 2 * abs((num_prices / 2) - s[0])
+                b = base
+            bs.append((scipy.misc.comb(n, k) * scipy.special.beta(k + a, n - k + b) / scipy.special.beta(a, b)) / num_prices)
+        bs.append(0)
+        belief_states[base] = bs
+    #for l, s in belief_states.items():
+        #print sum(s)
+    return belief_states
+
+
 
 # Usage: python GraphConsumer [-solve]
 # -solve means it will also create and solve the pomdp in addition to graphing
@@ -249,10 +311,11 @@ def main():
     # Set parameters
     num_prices = 8
     num_leave_probs = 21
-    belief_dist = 'price_bimodal'
+    belief_dist = 'price_uniform_leave_decreasing'
     epsilon = .000000001
     horizon = 1000
     save_all = False
+    xlabel = "leave_probability"
 
     # Create the initial belief state based on
     if belief_dist == 'price_uniform':
@@ -267,6 +330,13 @@ def main():
         belief_states = create_price_poisson_belief_dist(num_prices, num_leave_probs, 1)
     elif belief_dist == 'price_bimodal':
         belief_states = create_price_beta_binomial_belief_dist(num_prices, num_leave_probs, 0.3, 0.3)
+    elif belief_dist == 'leave_uniform':
+        belief_states = create_leave_uniform_belief_dist(num_prices, num_leave_probs)
+        xlabel = "Constant WTP"
+    if belief_dist == 'price_uniform_leave_increasing':
+        belief_states = create_price_uniform_leave_increasing_belief_dist(num_prices, num_leave_probs)
+    if belief_dist == 'price_uniform_leave_decreasing':
+        belief_states = create_price_uniform_leave_decreasing_belief_dist(num_prices, num_leave_probs)
     else:
         belief_states = create_price_uniform_belief_dist(num_prices, num_leave_probs)
 
@@ -294,7 +364,7 @@ def main():
         plt.scatter(*data, marker = marker.next())
         ax.plot(*data)
         ax.set_title('DOUBLE: Dist: {0} NumPrices: {1} NumLeaves: {2}'.format(belief_dist, num_prices, num_leave_probs))
-        ax.set_xlabel('Leaving Probability')
+        ax.set_xlabel(xlabel)
         ax.set_ylabel('Price')
         ax.set_ylim([0, num_prices + 1])
     plt.savefig(os.path.join(dirname, belief_dist + '.png'), format = 'png')
