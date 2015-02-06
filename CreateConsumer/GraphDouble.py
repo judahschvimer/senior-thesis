@@ -143,7 +143,7 @@ def get_states(num_prices, num_leave_probs):
 
 def create_price_uniform_belief_dist(num_prices, num_leave_probs):
     belief_states = {}
-    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+    for p in frange(0.0, 0.9999, 1.0/(num_leave_probs-1)):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -157,7 +157,7 @@ def create_price_uniform_belief_dist(num_prices, num_leave_probs):
 
 def create_leave_uniform_belief_dist(num_prices, num_leave_probs):
     belief_states = {}
-    for wtp in range(0, num_prices):
+    for wtp in range(1, num_prices):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -173,7 +173,7 @@ def create_price_increasing_belief_dist(num_prices, num_leave_probs):
     belief_states = {}
     total_increments = (num_prices + 1) * (num_prices + 2) / 2
     increment_size = 1.0 / total_increments
-    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+    for p in frange(0.0, 0.9999, 1.0/(num_leave_probs-1)):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -189,7 +189,7 @@ def create_price_decreasing_belief_dist(num_prices, num_leave_probs):
     belief_states = {}
     total_increments = (num_prices + 1) * (num_prices + 2) / 2
     increment_size = 1.0 / total_increments
-    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+    for p in frange(0.0, 0.9999, 1.0/(num_leave_probs-1)):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -204,7 +204,7 @@ def create_price_decreasing_belief_dist(num_prices, num_leave_probs):
 def create_price_binomial_belief_dist(num_prices, num_leave_probs, probability):
     belief_states = {}
     n = num_prices - 1
-    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+    for p in frange(0.0, 0.9999, 1.0/(num_leave_probs-1)):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -219,7 +219,7 @@ def create_price_binomial_belief_dist(num_prices, num_leave_probs, probability):
 
 def create_price_poisson_belief_dist(num_prices, num_leave_probs, lam):
     belief_states = {}
-    for p in frange(0.0, 1.0, 1.0/(num_leave_probs-1)):
+    for p in frange(0.0, 0.9999, 1.0/(num_leave_probs-1)):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -235,7 +235,7 @@ def create_price_poisson_belief_dist(num_prices, num_leave_probs, lam):
 def create_price_beta_binomial_belief_dist(num_prices, num_leave_probs, a, b):
     belief_states = {}
     n = num_prices - 1
-    for p in frange(0.0, 1.0, 1.0 / (num_leave_probs - 1)):
+    for p in frange(0.0, 0.9999, 1.0 / (num_leave_probs - 1)):
         bs = []
         states = get_states(num_prices, num_leave_probs)
         for s in states:
@@ -311,7 +311,7 @@ def main():
     # Set parameters
     num_prices = 8
     num_leave_probs = 21
-    belief_dist = 'price_uniform_leave_decreasing'
+    belief_dist = 'price_uniform'
     epsilon = .000000001
     horizon = 1000
     save_all = False
@@ -333,10 +333,12 @@ def main():
     elif belief_dist == 'leave_uniform':
         belief_states = create_leave_uniform_belief_dist(num_prices, num_leave_probs)
         xlabel = "Constant WTP"
-    if belief_dist == 'price_uniform_leave_increasing':
+    elif belief_dist == 'price_uniform_leave_increasing':
         belief_states = create_price_uniform_leave_increasing_belief_dist(num_prices, num_leave_probs)
-    if belief_dist == 'price_uniform_leave_decreasing':
+        xlabel = "Base Skewness"
+    elif belief_dist == 'price_uniform_leave_decreasing':
         belief_states = create_price_uniform_leave_decreasing_belief_dist(num_prices, num_leave_probs)
+        xlabel = "Base Skewness"
     else:
         belief_states = create_price_uniform_belief_dist(num_prices, num_leave_probs)
 
@@ -363,7 +365,7 @@ def main():
         ax = fig.add_subplot(111)
         plt.scatter(*data, marker = marker.next())
         ax.plot(*data)
-        ax.set_title('DOUBLE: Dist: {0} NumPrices: {1} NumLeaves: {2}'.format(belief_dist, num_prices, num_leave_probs))
+        ax.set_title('JOINT: Dist: {0} NumPrices: {1} NumLeaves: {2}'.format(belief_dist, num_prices, num_leave_probs))
         ax.set_xlabel(xlabel)
         ax.set_ylabel('Price')
         ax.set_ylim([0, num_prices + 1])

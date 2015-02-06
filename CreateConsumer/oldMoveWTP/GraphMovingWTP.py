@@ -148,7 +148,7 @@ def main():
 
     # Set parameters
     num_prices = 7
-    leave_probability = 0.9
+    leave_probability = 1.0
     move_probability_step = 0.05
     belief_dist = 'uniform'
     epsilon = 0.0000000000000000000000001
