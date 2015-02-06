@@ -1,0 +1,71 @@
+RF 0 is GoalBasedRF | Goal Reward: 0.0 StepReward: -1.0 InitQ: 0.0 Discount: 0.99
+RF 1 is GoalBasedRF | Goal Reward: 0.0 StepReward: -1.0 InitQ: 0.0 Discount: 1.0
+RF 2 is GoalBasedRF | Goal Reward: 1.0 StepReward: 0.0 InitQ: 0.0 Discount: 0.99
+RF 3 is GoalBasedRF | Goal Reward: 1.0 StepReward: 0.0 InitQ: 0.0 Discount: 1.0
+RF 4 is GoalBasedRF | Goal Reward: 1.0 StepReward: 0.0 InitQ: 1.0 Discount: 0.99
+RF 5 is GoalBasedRF | Goal Reward: 1.0 StepReward: 0.0 InitQ: 1.0 Discount: 1.0
+2 x 2 with RF 0: 7.074
+2 x 2 with RF 1: 7.058
+2 x 2 with RF 2: 8.98
+2 x 2 with RF 3: 8.969
+2 x 2 with RF 4: 7.096
+2 x 2 with RF 5: 7.019
+22 x 22 with RF 0: 2128.319
+22 x 22 with RF 1: 2098.885
+22 x 22 with RF 2: 3894.85
+22 x 22 with RF 3: 3986.539
+22 x 22 with RF 4: 2076.324
+22 x 22 with RF 5: 2070.489
+42 x 42 with RF 0: 8339.443
+42 x 42 with RF 1: 8525.285
+42 x 42 with RF 2: 17122.584
+42 x 42 with RF 3: 17478.172
+42 x 42 with RF 4: 8411.539
+42 x 42 with RF 5: 8170.61
+62 x 62 with RF 0: 19199.449
+62 x 62 with RF 1: 19429.788
+62 x 62 with RF 2: 41003.761
+62 x 62 with RF 3: 40962.641
+62 x 62 with RF 4: 19377.546
+62 x 62 with RF 5: 19074.372
+82 x 82 with RF 0: 35133.485
+82 x 82 with RF 1: 35317.925
+82 x 82 with RF 2: 78511.016
+82 x 82 with RF 3: 76190.977
+82 x 82 with RF 4: 35536.496
+82 x 82 with RF 5: 34581.978
+102 x 102 with RF 0: 54594.533
+102 x 102 with RF 1: 54871.409
+102 x 102 with RF 2: 123248.132
+102 x 102 with RF 3: 126557.382
+102 x 102 with RF 4: 55883.754
+102 x 102 with RF 5: 56352.175
+122 x 122 with RF 0: 79016.346
+122 x 122 with RF 1: 81523.73
+122 x 122 with RF 2: 184815.001
+122 x 122 with RF 3: 184759.576
+122 x 122 with RF 4: 79703.014
+122 x 122 with RF 5: 78204.23
+142 x 142 with RF 0: 108964.069
+142 x 142 with RF 1: 111430.815
+142 x 142 with RF 2: 254787.732
+142 x 142 with RF 3: 253725.12
+142 x 142 with RF 4: 110155.8
+142 x 142 with RF 5: 114597.838
+162 x 162 with RF 0: 144106.328
+162 x 162 with RF 1: 141584.573
+Exception in thread "main" java.lang.OutOfMemoryError: GC overhead limit exceeded
+	at java.util.ArrayList.iterator(ArrayList.java:814)
+	at burlap.behavior.statehashing.DiscreteStateHashFactory$DiscreteStateHashTuple.getIndexValue(DiscreteStateHashFactory.java:155)
+	at burlap.behavior.statehashing.DiscreteStateHashFactory$DiscreteStateHashTuple.computeHashCode(DiscreteStateHashFactory.java:131)
+	at burlap.behavior.statehashing.StateHashTuple.hashCode(StateHashTuple.java:60)
+	at java.util.HashMap.hash(HashMap.java:362)
+	at java.util.HashMap.getEntry(HashMap.java:462)
+	at java.util.HashMap.get(HashMap.java:417)
+	at burlap.behavior.singleagent.learning.tdmethods.QLearning.getStateNode(QLearning.java:399)
+	at burlap.behavior.singleagent.learning.tdmethods.QLearning.getQs(QLearning.java:362)
+	at burlap.behavior.singleagent.learning.tdmethods.QLearning.getQs(QLearning.java:347)
+	at burlap.behavior.singleagent.planning.commonpolicies.EpsilonGreedy.getAction(EpsilonGreedy.java:86)
+	at burlap.behavior.singleagent.learning.tdmethods.QLearning.runLearningEpisodeFrom(QLearning.java:467)
+	at burlap.behavior.singleagent.learning.tdmethods.QLearning.runLearningEpisodeFrom(QLearning.java:450)
+	at ComplexityTest.main(ComplexityTest.java:100)
