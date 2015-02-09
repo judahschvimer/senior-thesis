@@ -9,4 +9,5 @@ pomdp-solve-5.3/
 *.png
 *.txt
 *.pyc
+*.csv
 */tags
