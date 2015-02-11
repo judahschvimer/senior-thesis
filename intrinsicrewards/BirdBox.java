@@ -50,9 +50,10 @@ public class BirdBox implements DomainGenerator {
 
     public static final String PFAT = "at";
 
-	public static double LEARNINGRATE = 0.9;
+	public static double LEARNINGRATE = 1;
 	public static double DISCOUNTFACTOR = 0.99;
-	public static double EPSILONGREEDY = 0.8;
+	public static double EPSILONGREEDY = 0;
+	public static double CLOSEPROB = 0.1;
 
 
     //ordered so first dimension is x
@@ -239,14 +240,14 @@ public class BirdBox implements DomainGenerator {
 
 			if (box0Open.equals("open")){
 				double r = Math.random();
-				if (r < 0.1){
+				if (r < CLOSEPROB){
 					box0.setValue(ATTOPEN, "closed");
 					box0.setValue(ATTFILLED, true);
 				}
 			}
 			if (box1Open.equals("open")){
 				double r = Math.random();
-				if (r < 0.1){
+				if (r < CLOSEPROB){
 					box1.setValue(ATTOPEN, "closed");
 					box1.setValue(ATTFILLED, true);
 				}
@@ -382,7 +383,7 @@ public class BirdBox implements DomainGenerator {
 			String box1Open = box1.getStringValForAttribute(ATTOPEN);
 			if (box1Open.equals("open")){
 				double r = Math.random();
-				if (r < 0.1){
+				if (r < CLOSEPROB){
 					box1.setValue(ATTOPEN, "closed");
 					box1.setValue(ATTFILLED, true);
 				}
@@ -395,7 +396,7 @@ public class BirdBox implements DomainGenerator {
 			String box0Open = box0.getStringValForAttribute(ATTOPEN);
 			if (box0Open.equals("open")){
 				double r = Math.random();
-				if (r < 0.1){
+				if (r < CLOSEPROB){
 					box0.setValue(ATTOPEN, "closed");
 					box0.setValue(ATTFILLED, true);
 				}
@@ -500,10 +501,10 @@ public class BirdBox implements DomainGenerator {
             super(actionName, domain, "");
             for(int i = 0; i < 4; i++){
                 if(i == direction){
-                    directionProbs[i] = EPSILONGREEDY;
+                    directionProbs[i] = 1 - EPSILONGREEDY;
                 }
                 else{
-                    directionProbs[i] = (1 - EPSILONGREEDY) / 3.;
+                    directionProbs[i] = EPSILONGREEDY / 3.;
                 }
             }
         }
@@ -542,7 +543,7 @@ public class BirdBox implements DomainGenerator {
 			String box0Open = box0.getStringValForAttribute(ATTOPEN);
 			if (box0Open.equals("open")){
 				r = Math.random();
-				if (r < 0.1){
+				if (r < CLOSEPROB){
 					box0.setValue(ATTOPEN, "closed");
 					box0.setValue(ATTFILLED, true);
 				}
@@ -555,7 +556,7 @@ public class BirdBox implements DomainGenerator {
 			String box1Open = box1.getStringValForAttribute(ATTOPEN);
 			if (box1Open.equals("open")){
 				r = Math.random();
-				if (r < 0.1){
+				if (r < CLOSEPROB){
 					box1.setValue(ATTOPEN, "closed");
 					box1.setValue(ATTFILLED, true);
 				}

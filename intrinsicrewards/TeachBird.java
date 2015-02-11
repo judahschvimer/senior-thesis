@@ -77,9 +77,9 @@ public class TeachBird {
 
 		//add visual observer
 		//VisualActionObserver observer = new VisualActionObserver(domain,
-	//		birdBox.getVisualizer());
-	//	((SADomain)this.domain).setActionObserverForAllAction(observer);
-	//	observer.initGUI();
+		//	birdBox.getVisualizer());
+		//((SADomain)this.domain).setActionObserverForAllAction(observer);
+		//observer.initGUI();
 
 
 	}
@@ -197,8 +197,15 @@ public class TeachBird {
 		//custom reward function for more interesting results
 		final RewardFunction fitnessRF = new FitnessRF();
 		final RewardFunction paperRF = new PaperRF(.7, .3, -.01, -.05, .2, .1, -.02);
-		final RewardFunction openRF = new OpenRF(1, 5);
+		final RewardFunction openRF = new PaperRF(1, 1, 0, 0, .5, .5, 0);
+		final RewardFunction openXRF = new PaperRF(1, 1, 0, 0, .1, .1, 0);
+		final RewardFunction simplePenaltyRF = new PaperRF(1, 1, -.05, -.05, .1, .1, -.05);
+		final RewardFunction simplePenaltyX1RF = new PaperRF(5, 5, -.05, -.05, .1, .1, -.05);
+		final RewardFunction simplePenaltyX2RF = new PaperRF(1, 1, -.5, -.5, .1, .1, -.5);
+		final RewardFunction openPenaltyRF = new PaperRF(1, 1, -.05, -.05, 0, 0, -05);
+		final RewardFunction simpleOpenRF = new OpenRF(1, 5);
 		final TerminalFunction fitTF = new MaxFitnessTF(20);
+		final TerminalFunction nullTF = new NullTermination();
 
 		/**
 		 * Create factories for Q-learning agent
@@ -213,7 +220,7 @@ public class TeachBird {
 			@Override
 			public LearningAgent generateAgent() {
 				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
-				return new QLearning(domain, fitnessRF, fitTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE);
+				return new QLearning(domain, fitnessRF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
 			}
 		};
 
@@ -227,7 +234,7 @@ public class TeachBird {
 			@Override
 			public LearningAgent generateAgent() {
 				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
-				return new QLearning(domain, openRF, fitTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE);
+				return new QLearning(domain, openRF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
 			}
 		};
 
@@ -241,20 +248,109 @@ public class TeachBird {
 			@Override
 			public LearningAgent generateAgent() {
 				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
-				return new QLearning(domain, paperRF, fitTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE);
+				return new QLearning(domain, paperRF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
 			}
 		};
+
+		LearningAgentFactory learningFactorySimpleOpen = new LearningAgentFactory() {
+
+			@Override
+			public String getAgentName() {
+				return "Q Simple Open Reward";
+			}
+
+			@Override
+			public LearningAgent generateAgent() {
+				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
+				return new QLearning(domain, simpleOpenRF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
+			}
+		};
+
+		LearningAgentFactory learningFactoryOpenX = new LearningAgentFactory() {
+
+			@Override
+			public String getAgentName() {
+				return "Q Open X Reward";
+			}
+
+			@Override
+			public LearningAgent generateAgent() {
+				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
+				return new QLearning(domain, openXRF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
+			}
+		};
+
+		LearningAgentFactory learningFactorySimplePenalty = new LearningAgentFactory() {
+
+			@Override
+			public String getAgentName() {
+				return "Q Simple Penalty Reward";
+			}
+
+			@Override
+			public LearningAgent generateAgent() {
+				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
+				return new QLearning(domain, simplePenaltyRF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
+			}
+		};
+
+		LearningAgentFactory learningFactorySimplePenaltyX1 = new LearningAgentFactory() {
+
+			@Override
+			public String getAgentName() {
+				return "Q Simple Penalty X1 Reward";
+			}
+
+			@Override
+			public LearningAgent generateAgent() {
+				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
+				return new QLearning(domain, simplePenaltyX1RF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
+			}
+		};
+
+		LearningAgentFactory learningFactorySimplePenaltyX2 = new LearningAgentFactory() {
+
+
+			@Override
+			public String getAgentName() {
+				return "Q Simple Penalty X2 Reward";
+			}
+
+			@Override
+			public LearningAgent generateAgent() {
+				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
+				return new QLearning(domain, simplePenaltyX2RF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
+			}
+		};
+
+		LearningAgentFactory learningFactoryOpenPenalty = new LearningAgentFactory() {
+
+			@Override
+			public String getAgentName() {
+				return "Q Open Penalty Reward";
+			}
+
+			@Override
+			public LearningAgent generateAgent() {
+				//Domain domain, RewardFunction rf, TerminalFunction tf, double gamma, StateHashFactory hashingFactory, double qInit, double learningRate
+				return new QLearning(domain, openPenaltyRF, nullTF, BirdBox.DISCOUNTFACTOR, hashingFactory, 0.0, BirdBox.LEARNINGRATE, MAXSTEPS);
+			}
+		};
+
 
 
 		StateGenerator sg = new BirdStateGenerator();
 
 		LearningAlgorithmExperimenter exp = new LearningAlgorithmExperimenter((SADomain)this.domain,
-			fitnessRF, sg, 10, 100, learningFactoryFitness, learningFactoryOpen, learningFactoryPaper);
+			fitnessRF, sg, 100, 1,
+			learningFactoryFitness,
+			learningFactoryPaper);
 
-		exp.setUpPlottingConfiguration(500, 250, 2, 1000,
+		exp.setUpPlottingConfiguration(500, 250, 2, 1700,
 			TrialMode.MOSTRECENTANDAVERAGE,
-			PerformanceMetric.CUMULATIVESTEPSPEREPISODE,
-			PerformanceMetric.STEPSPEREPISODE);
+		//	PerformanceMetric.AVERAGEEPISODEREWARD,
+			PerformanceMetric.CUMULATIVEREWARDPERSTEP,
+			PerformanceMetric.CUMULTAIVEREWARDPEREPISODE);
 
 		exp.startExperiment();
 
@@ -378,7 +474,7 @@ public class TeachBird {
 				}
 
 			}
-
+			System.out.println("Bad open hungry combination: [hunger] " + hungry +" [open0] "+ open0 + " [open1] " + open1);
             return -999999;
         }
 
@@ -417,9 +513,9 @@ public class TeachBird {
 		//uncomment the example you want to see (and comment-out the rest)
 
 		RewardFunction paperRF = new PaperRF(.7, .3, -.01, -.05, .2, .1, -.02);
-		learner.QLearning(outputPath, paperRF, 0., 100);
+		//learner.QLearning(outputPath, paperRF, 20, 1);
 		//learner.ValueIterationExample(outputPath);
-		//learner.experimenterAndPlotter();
+		learner.experimenterAndPlotter();
 
 
 		//run the visualizer (only use if you don't use the experiment plotter example)
