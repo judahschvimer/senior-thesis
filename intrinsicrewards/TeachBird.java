@@ -61,7 +61,6 @@ public class TeachBird {
 		fitnessRF = new FitnessRF();
 		openRF = new OpenRF(1, 5);
 		paperRF = new PaperRF(.7, .3, -.01, -.05, .2, .1, -.02);
-		//tf = new MaxFitnessTF(20);
 		tf = new NullTermination();
 		goalCondition = new TFGoalCondition(tf);
 
@@ -106,12 +105,11 @@ public class TeachBird {
 		for(int i = 0; i < numEpisodes; i++){
 			EpisodeAnalysis ea = agent.runLearningEpisodeFrom(initialState, MAXSTEPS);
 			ea.writeToFile(String.format("%se%03d", outputPath, i), sp);
-			//int fitness = ea.getState(ea.numTimeSteps()-1).getFirstObjectOfClass(BirdBox.CLASSAGENT).getDiscValForAttribute(BirdBox.ATTFITNESS);
 		}
 
 		System.out.println("FITNESS");
 		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
-			printFitness(ea, 1);
+			//printFitness(ea, 1);
 		}
 		System.out.println("BOTH OPEN");
 		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
@@ -123,7 +121,7 @@ public class TeachBird {
 	private void printFitness(EpisodeAnalysis ea, int step){
 		int max = ea.maxTimeStep();
 		for (int i = 0; i < max; i+=step) {
-			System.out.print(ea.getState(i).getFirstObjectOfClass(BirdBox.CLASSAGENT).getDiscValForAttribute(BirdBox.ATTFITNESS) + ",");
+			//System.out.print(ea.getState(i).getFirstObjectOfClass(BirdBox.CLASSAGENT).getDiscValForAttribute(BirdBox.ATTFITNESS) + ",");
 		}
 		System.out.println("");
 	}
@@ -204,7 +202,6 @@ public class TeachBird {
 		final RewardFunction simplePenaltyX2RF = new PaperRF(1, 1, -.5, -.5, .1, .1, -.5);
 		final RewardFunction openPenaltyRF = new PaperRF(1, 1, -.05, -.05, 0, 0, -05);
 		final RewardFunction simpleOpenRF = new OpenRF(1, 5);
-		final TerminalFunction fitTF = new MaxFitnessTF(20);
 		final TerminalFunction nullTF = new NullTermination();
 
 		/**
@@ -342,15 +339,14 @@ public class TeachBird {
 		StateGenerator sg = new BirdStateGenerator();
 
 		LearningAlgorithmExperimenter exp = new LearningAlgorithmExperimenter((SADomain)this.domain,
-			fitnessRF, sg, 100, 1,
+			fitnessRF, sg, 20, 1,
 			learningFactoryFitness,
 			learningFactoryPaper);
 
 		exp.setUpPlottingConfiguration(500, 250, 2, 1700,
 			TrialMode.MOSTRECENTANDAVERAGE,
-		//	PerformanceMetric.AVERAGEEPISODEREWARD,
-			PerformanceMetric.CUMULATIVEREWARDPERSTEP,
-			PerformanceMetric.CUMULTAIVEREWARDPEREPISODE);
+			PerformanceMetric.AVERAGEEPISODEREWARD,
+			PerformanceMetric.CUMULATIVEREWARDPERSTEP);
 
 		exp.startExperiment();
 
@@ -480,28 +476,6 @@ public class TeachBird {
 
     }
 
-	protected static class MaxFitnessTF implements TerminalFunction{
-
-        int maxFitness;
-
-        public MaxFitnessTF(int maxFitness){
-            this.maxFitness = maxFitness;
-        }
-
-        @Override
-        public boolean isTerminal(State s) {
-
-            //get location of agent in next state
-            ObjectInstance agent = s.getFirstObjectOfClass(BirdBox.CLASSAGENT);
-            int fitness = agent.getDiscValForAttribute(BirdBox.ATTFITNESS);
-            //are they at goal location?
-            if(fitness >= maxFitness){
-                return true;
-            }
-
-            return false;
-        }
-    }
 
 	public static void main(String[] args) {
 
@@ -513,9 +487,9 @@ public class TeachBird {
 		//uncomment the example you want to see (and comment-out the rest)
 
 		RewardFunction paperRF = new PaperRF(.7, .3, -.01, -.05, .2, .1, -.02);
-		//learner.QLearning(outputPath, paperRF, 20, 1);
+		learner.QLearning(outputPath, paperRF, 20, 1);
 		//learner.ValueIterationExample(outputPath);
-		learner.experimenterAndPlotter();
+		//learner.experimenterAndPlotter();
 
 
 		//run the visualizer (only use if you don't use the experiment plotter example)

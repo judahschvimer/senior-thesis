@@ -34,7 +34,6 @@ public class BirdStateGenerator implements StateGenerator{
 		State s = new State();
         ObjectInstance agent = new ObjectInstance(domain.getObjectClass(BirdBox.CLASSAGENT), "agent0");
         agent.setValue(BirdBox.ATTHUNGRY, true);
-        agent.setValue(BirdBox.ATTFITNESS, 0);
 
         ObjectInstance box0 = new ObjectInstance(domain.getObjectClass(BirdBox.CLASSBOX), "box0");
         box0.setValue(BirdBox.ATTOPEN, "closed");

@@ -36,7 +36,6 @@ public class BirdBox implements DomainGenerator {
     public static final String ATTHUNGRY = "hungry";
     public static final String ATTOPEN = "open";
     public static final String ATTFILLED = "filled";
-    public static final String ATTFITNESS = "fitness";
 
     public static final String CLASSAGENT = "agent";
     public static final String CLASSBOX = "box";
@@ -93,7 +92,6 @@ public class BirdBox implements DomainGenerator {
         yatt.setLims(0, 10);
 
 		Attribute hungryatt = new Attribute(domain, ATTHUNGRY, AttributeType.BOOLEAN);
-		Attribute fitnessatt = new Attribute(domain, ATTFITNESS, AttributeType.INT);
 		Attribute openatt = new Attribute(domain, ATTOPEN, AttributeType.DISC);
 		String[] openArr = {"open", "half-open", "closed"};
 		openatt.setDiscValues(openArr);
@@ -103,7 +101,6 @@ public class BirdBox implements DomainGenerator {
         agentClass.addAttribute(xatt);
         agentClass.addAttribute(yatt);
         agentClass.addAttribute(hungryatt);
-        agentClass.addAttribute(fitnessatt);
 
         ObjectClass boxClass = new ObjectClass(domain, CLASSBOX);
         boxClass.addAttribute(xatt);
@@ -156,7 +153,6 @@ public class BirdBox implements DomainGenerator {
         agent.setValue(ATTX, 0);
         agent.setValue(ATTY, 6);
         agent.setValue(ATTHUNGRY, true);
-        agent.setValue(ATTFITNESS, 0);
 
         ObjectInstance box0 = new ObjectInstance(domain.getObjectClass(CLASSBOX), "box0");
         box0.setValue(ATTX, 6);
@@ -375,7 +371,6 @@ public class BirdBox implements DomainGenerator {
 				boolean currBoxFilled = currBox.getBooleanValue(ATTFILLED);
 				if (currBoxOpen.equals("half-open") && currBoxFilled ){
 					agent.setValue(ATTHUNGRY, false);
-					agent.setValue(ATTFITNESS, agent.getDiscValForAttribute(ATTFITNESS) + 1);
 					currBox.setValue(ATTFILLED, false);
 				}
 			}
