@@ -44,6 +44,9 @@ public class BirdStateGenerator implements StateGenerator{
 		Random r = new Random(System.currentTimeMillis());
 
         int i = r.nextInt(4);
+		int[][] map = gen.getMap();
+		int width = map.length;
+		int height = map[0].length;
 
         switch (i) {
             case 0:
@@ -51,16 +54,16 @@ public class BirdStateGenerator implements StateGenerator{
 				box0.setValue(BirdBox.ATTY, 0);
 				break;
             case 1:
-				box0.setValue(BirdBox.ATTX, 6);
+				box0.setValue(BirdBox.ATTX, width-1);
 				box0.setValue(BirdBox.ATTY, 0);
 				break;
             case 2:
 				box0.setValue(BirdBox.ATTX, 0);
-				box0.setValue(BirdBox.ATTY, 6);
+				box0.setValue(BirdBox.ATTY, height-1);
 				break;
             case 3:
-				box0.setValue(BirdBox.ATTX, 6);
-				box0.setValue(BirdBox.ATTY, 6);
+				box0.setValue(BirdBox.ATTX, width-1);
+				box0.setValue(BirdBox.ATTY, height-1);
 				break;
             default:
                 break;
@@ -73,29 +76,27 @@ public class BirdStateGenerator implements StateGenerator{
 		}
         switch (j) {
 
-            case 0:
+			case 0:
+
 				box1.setValue(BirdBox.ATTX, 0);
 				box1.setValue(BirdBox.ATTY, 0);
 				break;
             case 1:
-				box1.setValue(BirdBox.ATTX, 6);
+				box1.setValue(BirdBox.ATTX, width-1);
 				box1.setValue(BirdBox.ATTY, 0);
 				break;
             case 2:
 				box1.setValue(BirdBox.ATTX, 0);
-				box1.setValue(BirdBox.ATTY, 6);
+				box1.setValue(BirdBox.ATTY, height-1);
 				break;
             case 3:
-				box1.setValue(BirdBox.ATTX, 6);
-				box1.setValue(BirdBox.ATTY, 6);
+				box1.setValue(BirdBox.ATTX, width-1);
+				box1.setValue(BirdBox.ATTY, height-1);
 				break;
             default:
                 break;
         }
 
-		int[][] map = gen.getMap();
-		int width = map.length;
-		int height = map[0].length;
 		int x = r.nextInt(width);
 		int y = r.nextInt(height);
 		while (map[x][y] == 1) {

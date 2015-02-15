@@ -46,7 +46,7 @@ public class TeachBird {
 	State 						initialState;
 	DiscreteStateHashFactory	hashingFactory;
 
-	public static final int MAXSTEPS = 1;
+	public static final int MAXSTEPS = 10000;
 
 	public TeachBird(){
 
@@ -92,7 +92,7 @@ public class TeachBird {
 								domain, sp, outputPath);
 	}
 
-	public void QLearning(String outputPath, RewardFunction qrf, double qinit, int numEpisodes){
+	public void QLearning(String outputPath, RewardFunction qrf, double qinit, int numEpisodes, int stepsPerEpisode){
 
 		if(!outputPath.endsWith("/")){
 			outputPath = outputPath + "/";
@@ -105,37 +105,26 @@ public class TeachBird {
 		Policy p = new EpsilonGreedy((QComputablePlanner)agent, BirdBox.EPSILONGREEDY);
 		agent.setLearningPolicy(p);
 		agent.setNumEpisodesToStore(numEpisodes);
-		//run learning for 100 episodes
+
 		State currState = initialState;
 		for(int i = 0; i < numEpisodes; i++){
 			State s = currState;
 			//System.out.println(s.getStateDescription());
 			//AbstractGroundedAction topAction = bestAction(agent, s);
 			//System.out.println("BEST: " + topAction);
-			EpisodeAnalysis ea = agent.runLearningEpisodeFrom(currState, MAXSTEPS);
+			EpisodeAnalysis ea = agent.runLearningEpisodeFrom(currState, stepsPerEpisode);
 			//System.out.println("ACTION: " + ea.getAction(0));
 			//try {System.in.read();} catch(Exception e){};
 			ea.writeToFile(String.format("%se%03d", outputPath, i), sp);
 			currState = ea.getState(ea.maxTimeStep());
 			//System.out.println("**********************************************************\n\n");
-			if (i%100 == 1)System.out.println(i);
+			if (i%100 == 1)System.out.println("Episode(mod 100) " + i);
 		}
+		printFitness(agent, 1000);
+		printOpenness(agent, 1000);
 
-		System.out.println("FITNESS");
-		int c = 0;
-		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
-			if (c%10 == 1) printFitness(ea, 1);
-			c++;
-		}
-		c = 0;
-		System.out.println("BOTH OPEN");
-		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
-			if (c%10 == 1) printOpenness(ea, 1);
-			c++;
-		}
-		EpisodeAnalysis ea = agent.getLastLearningEpisode();
-		//for (int i = ea.maxTimeStep()-1; i>=0; i--){
-		/*for (int i = 0; i < ea.maxTimeStep(); i++){
+		/*EpisodeAnalysis ea = agent.getLastLearningEpisode();
+		for (int i = 0; i < ea.maxTimeStep(); i++){
 			State s = ea.getState(i);
 			System.out.println(s.getStateDescription());
 			AbstractGroundedAction topAction = bestAction(agent, s);
@@ -185,29 +174,39 @@ public class TeachBird {
 
 	}
 
-	private void printFitness(EpisodeAnalysis ea, int step){
-		int max = ea.maxTimeStep();
+	private void printFitness(QLearning agent, int step){
+		System.out.println("FITNESS");
 		int t = 0;
-		for (int i = 0; i < max; i+=step) {
-			if (!ea.getState(i).getFirstObjectOfClass(BirdBox.CLASSAGENT).getBooleanValue(BirdBox.ATTHUNGRY)){
-				t++;
+		int c = 0;
+		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
+			int max = ea.maxTimeStep();
+			for (int i = 0; i < max; i++) {
+				if (!ea.getState(i).getFirstObjectOfClass(BirdBox.CLASSAGENT).getBooleanValue(BirdBox.ATTHUNGRY)){
+					t++;
+				}
+				if(c%step == 0) System.out.print(t + ",");
+				c++;
 			}
-			System.out.print(t + ",");
+			System.out.println("");
 		}
-		System.out.println("");
 	}
 
-	private void printOpenness(EpisodeAnalysis ea, int step){
-		int max = ea.maxTimeStep();
+	private void printOpenness(QLearning agent, int step){
+		System.out.println("BOTH OPEN");
 		int t = 0;
-		for (int i = 0; i < max; i+=step) {
-			if (ea.getState(i).getObject("box0").getStringValForAttribute(BirdBox.ATTOPEN).equals("open") &&
-					ea.getState(i).getObject("box1").getStringValForAttribute(BirdBox.ATTOPEN).equals("open")){
-				t++;
+		int c = 0;
+		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
+			int max = ea.maxTimeStep();
+			for (int i = 0; i < max; i++) {
+				if (ea.getState(i).getObject("box0").getStringValForAttribute(BirdBox.ATTOPEN).equals("open") &&
+						ea.getState(i).getObject("box1").getStringValForAttribute(BirdBox.ATTOPEN).equals("open")){
+					t++;
+				}
+				if (c%step == 0) System.out.print(t + ",");
+				c++;
 			}
-			System.out.print(t + ",");
+			System.out.println("");
 		}
-		System.out.println("");
 	}
 
 	public void ValueIterationExample(String outputPath){
@@ -594,7 +593,8 @@ public class TeachBird {
 
 		RewardFunction paperRF = new PaperRF(.7, .3, -.01, -.05, .2, .1, -.02);
 		RewardFunction fitnessRF = new FitnessRF();
-		learner.QLearning(outputPath, paperRF, 0, 1000000);
+		learner.QLearning(outputPath, fitnessRF, 0, 1, 1000000);
+		learner.QLearning(outputPath, paperRF, 0, 1, 1000000);
 		//learner.ValueIterationExample(outputPath);
 	    //learner.experimenterAndPlotter();
 

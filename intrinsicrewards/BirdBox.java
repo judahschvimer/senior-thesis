@@ -65,6 +65,13 @@ public class BirdBox implements DomainGenerator {
             {0,0,0,0,0,0,0},
             {0,0,0,1,0,0,0},
     };
+    /*protected int [][] map = new int[][]{
+            {0,0,0,0,0},
+            {0,0,1,0,0},
+            {1,1,1,1,0},
+            {0,0,0,0,0},
+            {0,0,1,0,0}
+    };*/
 
 	public BirdBox(){
 		super();
@@ -146,15 +153,17 @@ public class BirdBox implements DomainGenerator {
 
 
     public static State getExampleState(Domain domain){
+		int width = 5;
+		int height = 5;
         State s = new State();
         ObjectInstance agent = new ObjectInstance(domain.getObjectClass(CLASSAGENT), "agent");
         agent.setValue(ATTX, 0);
-        agent.setValue(ATTY, 6);
+        agent.setValue(ATTY, height-1);
         agent.setValue(ATTHUNGRY, true);
 
         ObjectInstance box0 = new ObjectInstance(domain.getObjectClass(CLASSBOX), "box0");
-        box0.setValue(ATTX, 6);
-        box0.setValue(ATTY, 6);
+        box0.setValue(ATTX, width-1);
+        box0.setValue(ATTY, height-1);
         box0.setValue(ATTOPEN, "closed");
 
 		ObjectInstance box1 = new ObjectInstance(domain.getObjectClass(CLASSBOX), "box1");
