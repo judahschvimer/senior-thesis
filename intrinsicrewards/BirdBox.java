@@ -35,7 +35,6 @@ public class BirdBox implements DomainGenerator {
     public static final String ATTY = "y";
     public static final String ATTHUNGRY = "hungry";
     public static final String ATTOPEN = "open";
-    public static final String ATTFILLED = "filled";
 
     public static final String CLASSAGENT = "agent";
     public static final String CLASSBOX = "box";
@@ -49,9 +48,10 @@ public class BirdBox implements DomainGenerator {
 
     public static final String PFAT = "at";
 
-	public static double LEARNINGRATE = 1;
+	public static double LEARNINGRATE = .1;
 	public static double DISCOUNTFACTOR = 0.99;
-	public static double EPSILONGREEDY = 0;
+	public static double EPSILONGREEDY = 0.0;
+	public static double RANDOMMOVEMENT = 0;
 	public static double CLOSEPROB = 0.1;
 
 
@@ -95,7 +95,6 @@ public class BirdBox implements DomainGenerator {
 		Attribute openatt = new Attribute(domain, ATTOPEN, AttributeType.DISC);
 		String[] openArr = {"open", "half-open", "closed"};
 		openatt.setDiscValues(openArr);
-		Attribute filledatt = new Attribute(domain, ATTFILLED, AttributeType.BOOLEAN);
 
         ObjectClass agentClass = new ObjectClass(domain, CLASSAGENT);
         agentClass.addAttribute(xatt);
@@ -106,7 +105,6 @@ public class BirdBox implements DomainGenerator {
         boxClass.addAttribute(xatt);
         boxClass.addAttribute(yatt);
         boxClass.addAttribute(openatt);
-        boxClass.addAttribute(filledatt);
 
         new Movement(ACTIONNORTH, domain, 0);
         new Movement(ACTIONSOUTH, domain, 1);
@@ -149,7 +147,7 @@ public class BirdBox implements DomainGenerator {
 
     public static State getExampleState(Domain domain){
         State s = new State();
-        ObjectInstance agent = new ObjectInstance(domain.getObjectClass(CLASSAGENT), "agent0");
+        ObjectInstance agent = new ObjectInstance(domain.getObjectClass(CLASSAGENT), "agent");
         agent.setValue(ATTX, 0);
         agent.setValue(ATTY, 6);
         agent.setValue(ATTHUNGRY, true);
@@ -158,13 +156,11 @@ public class BirdBox implements DomainGenerator {
         box0.setValue(ATTX, 6);
         box0.setValue(ATTY, 6);
         box0.setValue(ATTOPEN, "closed");
-        box0.setValue(ATTFILLED, true);
 
 		ObjectInstance box1 = new ObjectInstance(domain.getObjectClass(CLASSBOX), "box1");
         box1.setValue(ATTX, 0);
         box1.setValue(ATTY, 0);
         box1.setValue(ATTOPEN, "closed");
-        box1.setValue(ATTFILLED, true);
 
         s.addObject(agent);
         s.addObject(box0);
@@ -206,18 +202,7 @@ public class BirdBox implements DomainGenerator {
             int curY = agent.getDiscValForAttribute(ATTY);
 			agent.setValue(ATTHUNGRY, true);
 
-			String box1Open = box1.getStringValForAttribute(ATTOPEN);
-			if (box1Open.equals("half-open")){
-				box1.setValue(ATTOPEN, "open");
-				box1.setValue(ATTFILLED, false);
-			}
-
-			String box0Open = box0.getStringValForAttribute(ATTOPEN);
-			if (box0Open.equals("half-open")){
-				box0.setValue(ATTOPEN, "open");
-				box0.setValue(ATTFILLED, false);
-			}
-
+			boolean justOpened = false;
 
 			ObjectInstance currBox = null;
 			if(curX == box0X && curY == box0Y){
@@ -228,25 +213,32 @@ public class BirdBox implements DomainGenerator {
 			}
 			if (currBox != null){
 				String currBoxOpen = currBox.getStringValForAttribute(ATTOPEN);
-				boolean currBoxFilled = currBox.getBooleanValue(ATTFILLED);
 				if (currBoxOpen.equals("closed")){
+					justOpened = true;
 					currBox.setValue(ATTOPEN, "half-open");
 				}
 			}
 
-			if (box0Open.equals("open")){
-				double r = Math.random();
-				if (r < CLOSEPROB){
-					box0.setValue(ATTOPEN, "closed");
-					box0.setValue(ATTFILLED, true);
-				}
-			}
+			String box1Open = box1.getStringValForAttribute(ATTOPEN);
 			if (box1Open.equals("open")){
 				double r = Math.random();
 				if (r < CLOSEPROB){
 					box1.setValue(ATTOPEN, "closed");
-					box1.setValue(ATTFILLED, true);
 				}
+			}
+			else if ((justOpened && currBox == box1) == false && box1Open.equals("half-open")){
+				box1.setValue(ATTOPEN, "open");
+			}
+
+			String box0Open = box0.getStringValForAttribute(ATTOPEN);
+			if (box0Open.equals("open")){
+				double r = Math.random();
+				if (r < CLOSEPROB){
+					box0.setValue(ATTOPEN, "closed");
+				}
+			}
+			else if ((justOpened && currBox == box0) == false && box0Open.equals("half-open")){
+				box0.setValue(ATTOPEN, "open");
 			}
 
 			return s;
@@ -255,7 +247,6 @@ public class BirdBox implements DomainGenerator {
 
 		@Override
         public List<TransitionProbability> getTransitions(State s, String [] params){
-
 			State ns = s.copy();
             ObjectInstance nagent = ns.getFirstObjectOfClass(CLASSAGENT);
 			ObjectInstance nbox0 = ns.getObject("box0");
@@ -268,11 +259,9 @@ public class BirdBox implements DomainGenerator {
 			String box1Open = nbox1.getStringValForAttribute(ATTOPEN);
 			if (box0Open.equals("half-open")){
 				nbox0.setValue(ATTOPEN, "open");
-				nbox0.setValue(ATTFILLED, false);
 			}
 			if (box1Open.equals("half-open")){
 				nbox1.setValue(ATTOPEN, "open");
-				nbox1.setValue(ATTFILLED, false);
 			}
 
 			State nnsOC = ns.copy();
@@ -281,7 +270,6 @@ public class BirdBox implements DomainGenerator {
 			if (box0Open.equals("open")){
 				ObjectInstance nnbox0 = nnsOC.getObject("box0");
 				nnbox0.setValue(ATTOPEN, "closed");
-				nnbox0.setValue(ATTFILLED, true);
 			}
 
 			State nnsOCOC = nnsOC.copy();
@@ -292,11 +280,9 @@ public class BirdBox implements DomainGenerator {
 			if (box1Open.equals("open")){
 				ObjectInstance nnbox1OC = nnsOCOC.getObject("box1");
 				nnbox1OC.setValue(ATTOPEN, "closed");
-				nnbox1OC.setValue(ATTFILLED, true);
 
 				ObjectInstance nnbox1OO = nnsOOOC.getObject("box1");
 				nnbox1OO.setValue(ATTOPEN, "closed");
-				nnbox1OO.setValue(ATTFILLED, true);
 			}
 
 			tpsWithBoxes.add(new TransitionProbability(nnsOCOC, .1*.1));
@@ -327,7 +313,6 @@ public class BirdBox implements DomainGenerator {
 				}
 				if (currBox != null){
 					String currBoxOpen = currBox.getStringValForAttribute(ATTOPEN);
-					boolean currBoxFilled = currBox.getBooleanValue(ATTFILLED);
 					if (currBoxOpen.equals("closed")){
 						currBox.setValue(ATTOPEN, "half-open");
 					}
@@ -357,6 +342,7 @@ public class BirdBox implements DomainGenerator {
             ObjectInstance agent = s.getFirstObjectOfClass(CLASSAGENT);
             int curX = agent.getDiscValForAttribute(ATTX);
             int curY = agent.getDiscValForAttribute(ATTY);
+
 			agent.setValue(ATTHUNGRY, true);
 
 			ObjectInstance currBox = null;
@@ -368,10 +354,8 @@ public class BirdBox implements DomainGenerator {
 			}
 			if (currBox != null){
 				String currBoxOpen = currBox.getStringValForAttribute(ATTOPEN);
-				boolean currBoxFilled = currBox.getBooleanValue(ATTFILLED);
-				if (currBoxOpen.equals("half-open") && currBoxFilled ){
+				if (currBoxOpen.equals("half-open") ){
 					agent.setValue(ATTHUNGRY, false);
-					currBox.setValue(ATTFILLED, false);
 				}
 			}
 
@@ -380,12 +364,10 @@ public class BirdBox implements DomainGenerator {
 				double r = Math.random();
 				if (r < CLOSEPROB){
 					box1.setValue(ATTOPEN, "closed");
-					box1.setValue(ATTFILLED, true);
 				}
 			}
 			else if (box1Open.equals("half-open")){
 				box1.setValue(ATTOPEN, "open");
-				box1.setValue(ATTFILLED, false);
 			}
 
 			String box0Open = box0.getStringValForAttribute(ATTOPEN);
@@ -393,12 +375,10 @@ public class BirdBox implements DomainGenerator {
 				double r = Math.random();
 				if (r < CLOSEPROB){
 					box0.setValue(ATTOPEN, "closed");
-					box0.setValue(ATTFILLED, true);
 				}
 			}
 			else if (box0Open.equals("half-open")){
 				box0.setValue(ATTOPEN, "open");
-				box0.setValue(ATTFILLED, false);
 			}
 
 
@@ -431,10 +411,8 @@ public class BirdBox implements DomainGenerator {
 			}
 			if (currBox != null){
 				String currBoxOpen = currBox.getStringValForAttribute(ATTOPEN);
-				boolean currBoxFilled = currBox.getBooleanValue(ATTFILLED);
-				if (currBoxOpen.equals("half-open") && currBoxFilled ){
+				if (currBoxOpen.equals("half-open")){
 					nagent.setValue(ATTHUNGRY, false);
-					currBox.setValue(ATTFILLED, false);
 				}
 			}
 
@@ -444,11 +422,9 @@ public class BirdBox implements DomainGenerator {
 			String box1Open = nbox1.getStringValForAttribute(ATTOPEN);
 			if (box0Open.equals("half-open")){
 				nbox0.setValue(ATTOPEN, "open");
-				nbox0.setValue(ATTFILLED, false);
 			}
 			if (box1Open.equals("half-open")){
 				nbox1.setValue(ATTOPEN, "open");
-				nbox1.setValue(ATTFILLED, false);
 			}
 
 			State nnsOC = ns.copy();
@@ -457,7 +433,6 @@ public class BirdBox implements DomainGenerator {
 			if (box0Open.equals("open")){
 				ObjectInstance nnbox0 = nnsOC.getObject("box0");
 				nnbox0.setValue(ATTOPEN, "closed");
-				nnbox0.setValue(ATTFILLED, true);
 			}
 
 			State nnsOCOC = nnsOC.copy();
@@ -468,11 +443,9 @@ public class BirdBox implements DomainGenerator {
 			if (box1Open.equals("open")){
 				ObjectInstance nnbox1OC = nnsOCOC.getObject("box1");
 				nnbox1OC.setValue(ATTOPEN, "closed");
-				nnbox1OC.setValue(ATTFILLED, true);
 
 				ObjectInstance nnbox1OO = nnsOOOC.getObject("box1");
 				nnbox1OO.setValue(ATTOPEN, "closed");
-				nnbox1OO.setValue(ATTFILLED, true);
 			}
 
 			tpsWithBoxes.add(new TransitionProbability(nnsOCOC, .1*.1));
@@ -540,12 +513,10 @@ public class BirdBox implements DomainGenerator {
 				r = Math.random();
 				if (r < CLOSEPROB){
 					box0.setValue(ATTOPEN, "closed");
-					box0.setValue(ATTFILLED, true);
 				}
 			}
 			else if (box0Open.equals("half-open")){
 				box0.setValue(ATTOPEN, "open");
-				box0.setValue(ATTFILLED, false);
 			}
 
 			String box1Open = box1.getStringValForAttribute(ATTOPEN);
@@ -553,12 +524,10 @@ public class BirdBox implements DomainGenerator {
 				r = Math.random();
 				if (r < CLOSEPROB){
 					box1.setValue(ATTOPEN, "closed");
-					box1.setValue(ATTFILLED, true);
 				}
 			}
 			else if (box1Open.equals("half-open")){
 				box1.setValue(ATTOPEN, "open");
-				box1.setValue(ATTFILLED, false);
 			}
 
             //return the state we just modified
@@ -616,11 +585,9 @@ public class BirdBox implements DomainGenerator {
 				String box1Open = nbox1.getStringValForAttribute(ATTOPEN);
 				if (box0Open.equals("half-open")){
 					nbox0.setValue(ATTOPEN, "open");
-					nbox0.setValue(ATTFILLED, false);
 				}
 				if (box1Open.equals("half-open")){
 					nbox1.setValue(ATTOPEN, "open");
-					nbox1.setValue(ATTFILLED, false);
 				}
 
 				State nnsOC = ns.copy();
@@ -629,7 +596,6 @@ public class BirdBox implements DomainGenerator {
 				if (box0Open.equals("open")){
 					ObjectInstance nnbox0 = nnsOC.getObject("box0");
 					nnbox0.setValue(ATTOPEN, "closed");
-					nnbox0.setValue(ATTFILLED, true);
 				}
 
 				State nnsOCOC = nnsOC.copy();
@@ -640,11 +606,9 @@ public class BirdBox implements DomainGenerator {
 				if (box1Open.equals("open")){
 					ObjectInstance nnbox1OC = nnsOCOC.getObject("box1");
 					nnbox1OC.setValue(ATTOPEN, "closed");
-					nnbox1OC.setValue(ATTFILLED, true);
 
 					ObjectInstance nnbox1OO = nnsOOOC.getObject("box1");
 					nnbox1OO.setValue(ATTOPEN, "closed");
-					nnbox1OO.setValue(ATTFILLED, true);
 				}
 
 				tpsWithBoxes.add(new TransitionProbability(nnsOCOC, tp.p*.1*.1));
@@ -816,28 +780,20 @@ public class BirdBox implements DomainGenerator {
         public void paintObject(Graphics2D g2, State s, ObjectInstance ob,
                 float cWidth, float cHeight) {
 
-			boolean filled = ob.getBooleanValue(ATTFILLED);
 			String open = ob.getStringValForAttribute(ATTOPEN);
 			Color color;
-			int thickness;
-			if (filled) {
-				color = Color.RED;
-			} else {
+			if (open.equals("open")){
 				color = Color.LIGHT_GRAY;
 			}
-			if (open.equals("open")){
-				thickness = 0;
-			}
 			else if (open.equals("half-open")){
-				thickness = 10;
+				color = Color.RED;
 			}
 			else {
-				thickness = 40;
+				color = Color.BLACK;
 			}
 
 
             g2.setColor(color);
-			g2.setStroke(new BasicStroke(thickness));
 
 
             //set up floats for the width and height of our domain
@@ -863,7 +819,6 @@ public class BirdBox implements DomainGenerator {
             //paint the rectangle
             g2.fill(new Rectangle2D.Float(rx, ry, width, height));
 			g2.setColor(Color.BLACK);
-            g2.draw(new Rectangle2D.Float(rx+(float).5*thickness, ry+(float).5*thickness, width-thickness, height-thickness));
         }
     }
 }
