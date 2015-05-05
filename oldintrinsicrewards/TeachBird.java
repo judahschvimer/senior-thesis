@@ -33,7 +33,6 @@ import burlap.behavior.singleagent.auxiliary.valuefunctionvis.common.*;
 import burlap.behavior.singleagent.auxiliary.valuefunctionvis.common.PolicyGlyphPainter2D.PolicyGlyphRenderStyle;
 import burlap.oomdp.singleagent.common.VisualActionObserver;
 import burlap.oomdp.auxiliary.common.NullTermination;
-import burlap.behavior.singleagent.planning.commonpolicies.EpsilonGreedy;
 
 public class TeachBird {
 
@@ -76,8 +75,8 @@ public class TeachBird {
 
 
 		//add visual observer
-		VisualActionObserver observer = new VisualActionObserver(domain,
-			birdBox.getVisualizer());
+		//VisualActionObserver observer = new VisualActionObserver(domain,
+		//	birdBox.getVisualizer());
 		//observer.setFrameDelay(100);
 		//((SADomain)this.domain).setActionObserverForAllAction(observer);
 		//observer.initGUI();
@@ -92,7 +91,7 @@ public class TeachBird {
 								domain, sp, outputPath);
 	}
 
-	public void QLearning(String outputPath, RewardFunction qrf, double qinit, int numEpisodes, int stepsPerEpisode){
+	public void QLearning(String outputPath, RewardFunction qrf, double qinit, int numEpisodes){
 
 		if(!outputPath.endsWith("/")){
 			outputPath = outputPath + "/";
@@ -102,52 +101,41 @@ public class TeachBird {
 
 		//discount= 0.99; initialQ=0.0; learning rate=0.9
 		QLearning agent = new QLearning(domain, qrf, qtf, BirdBox.DISCOUNTFACTOR, hashingFactory, qinit, BirdBox.LEARNINGRATE);
-		Policy p = new EpsilonGreedy((QComputablePlanner)agent, BirdBox.EPSILONGREEDY);
-		agent.setLearningPolicy(p);
+		//Policy p = new GreedyQPolicy((QComputablePlanner)agent);
 		agent.setNumEpisodesToStore(numEpisodes);
-
-		State currState = initialState;
+		//run learning for 100 episodes
 		for(int i = 0; i < numEpisodes; i++){
-			State s = currState;
-			//System.out.println(s.getStateDescription());
-			//AbstractGroundedAction topAction = bestAction(agent, s);
-			//System.out.println("BEST: " + topAction);
-			EpisodeAnalysis ea = agent.runLearningEpisodeFrom(currState, stepsPerEpisode);
-			//System.out.println("ACTION: " + ea.getAction(0));
-			//try {System.in.read();} catch(Exception e){};
+			EpisodeAnalysis ea = agent.runLearningEpisodeFrom(initialState, MAXSTEPS);
 			ea.writeToFile(String.format("%se%03d", outputPath, i), sp);
-			currState = ea.getState(ea.maxTimeStep());
-			//System.out.println("**********************************************************\n\n");
-			if (i%100 == 1)System.out.println("Episode(mod 100) " + i);
+			//this.valueFunctionVisualize((QComputablePlanner)agent, p);
 		}
-		printFitness(agent, 1000);
-		printOpenness(agent, 1000);
 
-		/*EpisodeAnalysis ea = agent.getLastLearningEpisode();
-		for (int i = 0; i < ea.maxTimeStep(); i++){
+		System.out.println("FITNESS");
+		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
+			printFitness(ea, 1);
+		}
+		System.out.println("BOTH OPEN");
+		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
+			printOpenness(ea, 1);
+		}
+		EpisodeAnalysis ea = agent.getLastLearningEpisode();
+		for (int i = ea.maxTimeStep()-1; i>=0; i--){
 			State s = ea.getState(i);
 			System.out.println(s.getStateDescription());
-			AbstractGroundedAction topAction = bestAction(agent, s);
+			double topQ = -999999;
+			AbstractGroundedAction topAction = null;
+			for(QValue q : agent.getQs(s)){
+				System.out.println(sprintQ(q));
+				if(q.q > topQ){
+					topAction = q.a;
+					topQ = q.q;
+				}
+			}
 			System.out.println("BEST: " + topAction);
-			System.out.println("ACTION: " + ea.getAction(i));
-			if(i!=0) System.out.println("REWARD: " + ea.getReward(i));
-			System.out.println("END\n\n");
 			try {System.in.read();} catch(Exception e){};
-		}*/
+		}
 	}
 
-	private AbstractGroundedAction bestAction(QLearning agent, State s){
-		double topQ = -999999;
-		AbstractGroundedAction topAction = null;
-		for(QValue q : agent.getQs(s)){
-			System.out.println(sprintQ(q));
-			if(q.q > topQ){
-				topAction = q.a;
-				topQ = q.q;
-			}
-		}
-		return topAction;
-	}
 
 	private String sprintQ(QValue q){
 		return "Action: " + q.a + " Q: " + q.q;
@@ -174,39 +162,29 @@ public class TeachBird {
 
 	}
 
-	private void printFitness(QLearning agent, int step){
-		System.out.println("FITNESS");
+	private void printFitness(EpisodeAnalysis ea, int step){
+		int max = ea.maxTimeStep();
 		int t = 0;
-		int c = 0;
-		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
-			int max = ea.maxTimeStep();
-			for (int i = 0; i < max; i++) {
-				if (!ea.getState(i).getFirstObjectOfClass(BirdBox.CLASSAGENT).getBooleanValue(BirdBox.ATTHUNGRY)){
-					t++;
-				}
-				if(c%step == 0) System.out.print(t + ",");
-				c++;
+		for (int i = 0; i < max; i+=step) {
+			if (!ea.getState(i).getFirstObjectOfClass(BirdBox.CLASSAGENT).getBooleanValue(BirdBox.ATTHUNGRY)){
+				t++;
 			}
-			System.out.println("");
+			System.out.print(t + ",");
 		}
+		System.out.println("");
 	}
 
-	private void printOpenness(QLearning agent, int step){
-		System.out.println("BOTH OPEN");
+	private void printOpenness(EpisodeAnalysis ea, int step){
+		int max = ea.maxTimeStep();
 		int t = 0;
-		int c = 0;
-		for (EpisodeAnalysis ea: agent.getAllStoredLearningEpisodes()){
-			int max = ea.maxTimeStep();
-			for (int i = 0; i < max; i++) {
-				if (ea.getState(i).getObject("box0").getStringValForAttribute(BirdBox.ATTOPEN).equals("open") &&
-						ea.getState(i).getObject("box1").getStringValForAttribute(BirdBox.ATTOPEN).equals("open")){
-					t++;
-				}
-				if (c%step == 0) System.out.print(t + ",");
-				c++;
+		for (int i = 0; i < max; i+=step) {
+			if (ea.getState(i).getObject("box0").getStringValForAttribute(BirdBox.ATTOPEN).equals("open") &&
+					ea.getState(i).getObject("box1").getStringValForAttribute(BirdBox.ATTOPEN).equals("open")){
+				t++;
 			}
-			System.out.println("");
+			System.out.print(t + ",");
 		}
+		System.out.println("");
 	}
 
 	public void ValueIterationExample(String outputPath){
@@ -468,10 +446,9 @@ public class TeachBird {
         public double reward(State s, GroundedAction a, State sprime) {
 
             //get location of agent in next state
-            ObjectInstance agentold = s.getFirstObjectOfClass(BirdBox.CLASSAGENT);
             ObjectInstance agent = sprime.getFirstObjectOfClass(BirdBox.CLASSAGENT);
             boolean hungry = agent.getBooleanValue(BirdBox.ATTHUNGRY);
-            boolean hungryold = agentold.getBooleanValue(BirdBox.ATTHUNGRY);
+
             //are they at goal location?
             if(!hungry){
                 return 1;
@@ -540,15 +517,15 @@ public class TeachBird {
             boolean hungry = agent.getBooleanValue(BirdBox.ATTHUNGRY);
             String open0 = box0.getStringValForAttribute(BirdBox.ATTOPEN);
             String open1 = box1.getStringValForAttribute(BirdBox.ATTOPEN);
-			double reward = -9999999;
+
 
             //are they at goal location?
             if(!hungry){
                 if((open0.equals("open") && open1.equals("closed")) || (open1.equals("open") && open0.equals("closed"))){
-					reward = son;
+					return son;
 				}
 				else if (open0.equals("open") && open1.equals("open")){
-					reward = soo;
+					return soo;
 				}
 				else {
 					System.out.println("Bad open hungry combination: [hunger] " + hungry +" [open0] "+ open0 + " [open1] " + open1);
@@ -556,27 +533,27 @@ public class TeachBird {
             }
 			else{
                 if((open0.equals("open") && open1.equals("closed")) || (open1.equals("open") && open0.equals("closed"))){
-					reward = hon;
+					return hon;
 				}
 				else if (open0.equals("open") && open1.equals("open")){
-					reward = hoo;
+					return hoo;
 				}
 				else if((open0.equals("open") && open1.equals("half-open")) || (open1.equals("open") && open0.equals("half-open"))){
-					reward =  hoh;
+					return hoh;
 				}
 				else if((open0.equals("half-open") && open1.equals("closed")) || (open1.equals("half-open") && open0.equals("closed"))){
-					reward = hnh;
+					return hnh;
 				}
 				else if (open0.equals("closed") && open1.equals("closed")){
-					reward = hnn;
+					return hnn;
 				}
 				else {
 					System.out.println("Bad open hungry combination: [hunger] " + hungry +" [open0] "+ open0 + " [open1] " + open1);
 				}
 
 			}
-			//System.out.println("REWARD: " + reward);
-            return reward;
+			System.out.println("Bad open hungry combination: [hunger] " + hungry +" [open0] "+ open0 + " [open1] " + open1);
+            return -999999;
         }
 
     }
@@ -593,10 +570,9 @@ public class TeachBird {
 
 		RewardFunction paperRF = new PaperRF(.7, .3, -.01, -.05, .2, .1, -.02);
 		RewardFunction fitnessRF = new FitnessRF();
-		//learner.QLearning(outputPath, fitnessRF, 0, 1, 100000);
-		//learner.QLearning(outputPath, paperRF, 0, 1, 100000);
+		learner.QLearning(outputPath, fitnessRF, 0, 1);
 		//learner.ValueIterationExample(outputPath);
-	    learner.experimenterAndPlotter();
+		//learner.experimenterAndPlotter();
 
 
 		//run the visualizer (only use if you don't use the experiment plotter example)
